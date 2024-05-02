@@ -1,7 +1,7 @@
 # HexSchool-Meta-Wall
 
 ## 項目介紹
-HexSchool-Meta-Wall 是一個專門為...設計的開源項目，旨在...
+HexSchool-Meta-Wall 
 
 ## 功能特點
 - 功能 1
