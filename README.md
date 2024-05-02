@@ -4,14 +4,20 @@
 HexSchool-Meta-Wall 
 
 ## 功能特點
-- 功能 1
-- 功能 2
-- 功能 3
+- Week 3:
+    1. 建立express版本
+    2. 建立 ./models/posts.js MODEL
+    3. 建立 ./routes/posts.js API  
+        3-1. 查詢全部
+        3-2. 查詢單筆
+        3-3. 新增單筆資料
+        3-4. 修改單筆資料
+        3-5. 刪除單筆資料
 
 ## 技術棧
-- 技術或框架 1
-- 技術或框架 2
-- 技術或框架 3
+- express --no view
+- mongoose
+
 
 ## 安裝指南
 ```bash
@@ -25,3 +31,8 @@ cd HexSchool-Meta-Wall
 npm install
 
 npm install dotenv cors mongoose
+
+# 環境變數
+PORT=
+DATABASE=
+DATABASE_PASSWORD=
