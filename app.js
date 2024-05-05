@@ -35,4 +35,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/posts', postRouter);
+
+// 404 錯誤
+app.use(function(req, res, next) {
+    res.status(404).json({
+      status: 'error',
+      message: "查無此路由，請確認API格式!",
+    });
+  });
+
 module.exports = app;
