@@ -4,7 +4,7 @@ const userSchema = new mongoose.Schema(
     name: {
       type: String,
       required: [true, '名字 未填寫']
-    },
+    }, 
     photo:{
         type: String
     },   
