@@ -13,7 +13,7 @@ HexSchool-Meta-Wall
         3-3. 新增單筆資料
         3-4. 修改單筆資料
         3-5. 刪除單筆資料
- 助教補充:
+- 助教補充:
     1. 可在 app.js 路由下方加上一個找不到頁面的 404 錯誤訊息捕捉。
     2. 刪除單筆資料時，若使用者傳入格式正確但不存在的 ObjectId，mongoose 預設會回傳 null 並回傳刪除成功，可以再針對此情況自訂錯誤訊息。
     3. 由於最終作業是一個臉書動態牆，不能有新增空白內容的情況，因此建議 PUT 這裡加上一個 data.content 是否為空的判斷，或者可以在 findByIdAndUpdate 加入第三個參數 { runValidators: true }，讓 findByIdAndUpdate 也可以跑 Schema 驗證規則，可以參考
