@@ -5,7 +5,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, '名字 未填寫']
     },
-   
+    photo:{
+        type: String
+    },   
     sex: {
       type: String,
       enum:["maile", "female"]
