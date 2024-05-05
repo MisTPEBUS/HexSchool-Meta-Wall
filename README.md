@@ -4,7 +4,7 @@
 HexSchool-Meta-Wall 
 
 ## 版本控管
-- Week 3:
+- Week 3: 
     1. 建立express版本
     2. 建立 ./models/posts.js MODEL
     3. 建立 ./routes/posts.js API  
