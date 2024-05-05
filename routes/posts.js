@@ -69,22 +69,33 @@ router.post('/', async function (req, res, next) {
 //更新貼文
 router.put('/:id', async function (req, res, next) {
     const { id } = req.params;
-   console.log('body', req.body);
+    const { content } = req.body;
+
     try {
-        const newPost = await Post.findByIdAndUpdate(id, req.body,{ new: true });
-        if (newPost) {
-                res.status(200).json({
-                success: true,
-                message: "已修改貼文",
-                post: newPost
-            });
-        } else {
-            res.status(404).json({
+        if (!content) {
+            return res.status(400).json({
                 success: false,
-                message: "找不到貼文",
+                message: `Content不得為空值!`,
             });
         }
-       
+
+        const postToUpdate = await Post.findOneAndUpdate({ id }, req.body, { new: true });
+
+        if (!postToUpdate) {
+            return res.status(404).json({
+                success: false,
+                message: `此貼文ID:${id}不存在!`,
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "已修改貼文",
+            post: postToUpdate
+        });
+
+
+
     } catch (err) {
         console.log(err)
         res.status(400).json({
@@ -102,14 +113,24 @@ router.put('/:id', async function (req, res, next) {
 router.delete('/:id', async function (req, res, next) {
     // query params
     const { id } = req.params;
-    
+
 
     try {
-        const newPost = await Post.findByIdAndDelete(id);
+        const postToDelete = await Post.findOneAndDelete({ id });
+
+        if (!postToDelete) {
+            return res.status(404).json({
+                success: false,
+                message: `此貼文ID:${id}不存在!`,
+            })
+        }
+
         res.status(200).json({
             success: true,
-            message: `貼文ID:${id} 已刪除!` 
+            message: `貼文ID:${id} 已刪除!`
         })
+
+
     } catch (err) {
         console.log(err)
         res.status(400).json({
