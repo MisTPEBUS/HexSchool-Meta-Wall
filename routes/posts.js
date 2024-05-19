@@ -2,8 +2,11 @@ var express = require('express');
 var router = express.Router();
 const Post = require("../models/posts");
 
+const handleErrorAsync = require('../service/handleErrorAsync.js');
+const appError = require('../service/appError.js');
+
 //查詢全部貼文
-router.get('/', async function (req, res, next) {
+router.get('/', async function (req, res)  {
     const { timeSort, keyWord } = req.query;
     //設定排序為時間近到遠還是遠道近(預設時間近期貼文)
     const tSort = timeSort == "asc" ? "createdAt" : "-createdAt"
@@ -16,147 +19,106 @@ router.get('/', async function (req, res, next) {
             { content: new RegExp(keyWord, 'i') }
         ];
     }
+    const posts = await Post.find(query).populate('user').sort(tSort);
 
-    try {
-        const posts = await Post.find(query).populate('user').sort(tSort);
+    res.status(200).json({
+        success: true,
+        message: "搜尋成功",
+        posts: posts
+    })
 
-        res.status(200).json({
-            success: true,
-            message: "搜尋成功",
-            posts: posts
-        })
-    } catch (err) {
-        console.log(err)
-        res.status(400).json({
-            success: false,
-            message: "查詢異常",
-            errMsg: err.message
-        })
-    }
 });
 
 //查詢單一貼文
-router.get('/:id', async function (req, res, next) {
+router.get('/:id', handleErrorAsync(async (req, res, next) => {
     const { id } = req.params;
-    try {
-        const posts = await Post.findById(id);
-
-        res.status(200).json({
-            success: true,
-            message: "搜尋成功",
-            posts: posts
-        })
-    } catch (err) {
-        console.log(err)
-        res.status(400).json({
-            success: false,
-            message: "查詢異常",
-            errMsg: err.message
-        })
+    if(!id){
+        next(appError(400, "貼文ID不得為空值!", next))
     }
-});
+    const post = await Post.findOne({id:id});
+    res.status(200).json({
+        success: true,
+        message: "搜尋成功",
+        post: post
+    })
+}));
 
 //新增貼文
-router.post('/', async function (req, res, next) {
-    const { content }  = req.body;
-    try {
-        if (!postToDelete) {
-            return res.status(400).json({
-                success: false,
-                message: `content不能為空值!`,
-            })
-        }
-        const newPost = await Post.create(req.body);
-        console.log(newPost)
-        res.status(200).json({
-            success: true,
-            message: "已建立貼文",
-            post: newPost
-        })
-    } catch (err) {
-        console.log(err)
-        res.status(400).json({
-            success: false,
-            message: "無法建立貼文",
-            errMsg: err.message
-        })
+router.post('/', handleErrorAsync(async (req, res, next) => {
+    const { user, content } = req.body;
+    //需要week6 加入jwt取ID 所以week5放在body
+    if (!user) {
+        return next(appError("400", "userID欄位不能為空值！", next));
     }
+    if (!content) {
+        return next(appError("400", "Content欄位不能為空值！", next));
+    }
+    const newPost = await Post.create({
+        user,
+        content,
+        userPhoto,
+        image
+    });
+    res.status(200).json({
+        "status": true,
+        "message": "新增成功!",
+        post: newPost
+    })
 
 
-});
+}));
 
 //更新貼文
-router.put('/:id', async function (req, res, next) {
+router.put('/:id', handleErrorAsync(async (req, res, next) => {
     const { id } = req.params;
     const { content } = req.body;
 
-    try {
-        if (!content) {
-            return res.status(400).json({
-                success: false,
-                message: `Content不得為空值!`,
-            });
-        }
+    if (!content) {
+        return res.status(400).json({
+            success: false,
+            message: `Content不得為空值!`,
+        });
+    }
+   
+    if(!id){
+        return next(appError(400,`此貼文ID:${id}不存在!`,next));
+    }
 
-        const postToUpdate = await Post.findOneAndUpdate({ id }, req.body, { new: true });
+    if (!req.body.user) {
+        return res.status(400).json({
+            success: false,
+            message: `userID不得為空值!`,
+        });
+    }
 
-        if (!postToUpdate) {
-            return res.status(404).json({
-                success: false,
-                message: `此貼文ID:${id}不存在!`,
-            });
-        }
 
+    const postToUpdate = await Post.findOneAndUpdate({ id }, req.body, { new: true });
         res.status(200).json({
             success: true,
             message: "已修改貼文",
             post: postToUpdate
         });
-    } catch (err) {
-        console.log(err)
-        res.status(400).json({
-            success: false,
-            message: "無法建立貼文",
-            errMsg: err.message
-        })
-    }
 
-
-});
+}));
 
 //刪除文章
 
-router.delete('/:id', async function (req, res, next) {
+router.delete('/:id', handleErrorAsync(async (req, res, next) => {
     // query params
     const { id } = req.params;
 
-
-    try {
-        const postToDelete = await Post.findOneAndDelete({ id });
-
-        if (!postToDelete) {
-            return res.status(404).json({
-                success: false,
-                message: `此貼文ID:${id}不存在!`,
-            })
-        }
-
-        res.status(200).json({
-            success: true,
-            message: `貼文ID:${id} 已刪除!`
-        })
-
-
-    } catch (err) {
-        console.log(err)
-        res.status(400).json({
-            success: false,
-            message: "無法建立貼文",
-            errMsg: err.message
-        })
+    if(!id){
+        return next(appError(404,`此貼文ID:${id}不存在!`,next));
     }
 
+    const postToDelete = await Post.findOneAndDelete({ id });
 
-});
+    res.status(200).json({
+        success: true,
+        message: `貼文ID:${id} 已刪除!`
+    })
+   
+
+}));
 
 module.exports = router;
