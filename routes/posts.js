@@ -4,8 +4,21 @@ const Post = require("../models/posts");
 
 //查詢全部貼文
 router.get('/', async function (req, res, next) {
+    const { timeSort, keyWord } = req.query;
+    //設定排序為時間近到遠還是遠道近(預設時間近期貼文)
+    const tSort = timeSort == "asc" ? "createdAt" : "-createdAt"
+    let query = {};
+
+    //關鍵字針對Model中userName + content 搜尋
+    if (keyWord) {
+        query.$or = [
+            { userName: new RegExp(keyWord, 'i') },
+            { content: new RegExp(keyWord, 'i') }
+        ];
+    }
+
     try {
-        const posts = await Post.find();
+        const posts = await Post.find(query).populate('user').sort(tSort);
 
         res.status(200).json({
             success: true,
@@ -45,8 +58,14 @@ router.get('/:id', async function (req, res, next) {
 
 //新增貼文
 router.post('/', async function (req, res, next) {
-    console.log(req.body)
+    const { content }  = req.body;
     try {
+        if (!postToDelete) {
+            return res.status(400).json({
+                success: false,
+                message: `content不能為空值!`,
+            })
+        }
         const newPost = await Post.create(req.body);
         console.log(newPost)
         res.status(200).json({
@@ -93,9 +112,6 @@ router.put('/:id', async function (req, res, next) {
             message: "已修改貼文",
             post: postToUpdate
         });
-
-
-
     } catch (err) {
         console.log(err)
         res.status(400).json({

@@ -10,7 +10,8 @@ const userSchema = new mongoose.Schema(
     },   
     sex: {
       type: String,
-      enum:["maile", "female"]
+      enum:["maile", "female"],
+      required: [true, '性別 未填寫']
     },
     email: {
       type: String,
@@ -21,10 +22,22 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, '請輸入密碼'],
+      required: [true, '密碼 未填寫'],
       minlength: 8,
       select: false
     },
+    followers: [
+      {
+        email: { 
+          type: string,
+          ref: 'User'
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now
+        }
+      }
+    ],
     createdAt: {
       type: Date,
       default: Date.now,
