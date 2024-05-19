@@ -18,16 +18,12 @@ HexSchool-Meta-Wall
     2. 刪除單筆資料時，若使用者傳入格式正確但不存在的 ObjectId，mongoose 預設會回傳 null 並回傳刪除成功，可以再針對此情況自訂錯誤訊息。
     3. 由於最終作業是一個臉書動態牆，不能有新增空白內容的情況，因此建議 PUT 這裡加上一個 data.content 是否為空的判斷，或者可以在 findByIdAndUpdate 加入第三個參數 { runValidators: true }，讓 findByIdAndUpdate 也可以跑 Schema 驗證規則，可以參考
     (https://israynotarray.com/nodejs/20220301/1465076357/)這篇文章哦
-
-- Week 4 (整合 user model, 貼文API): 
+- Week 4 (整合 user model): 
     1. 建立 ./models/users.js MODEL
     2. ./models/posts.js 關聯 users Model  
     3. ./routes/posts.js API 
-        3-1. 查詢全部: 加入時間排序+篩選關鍵字    
-        3-2. 新增貼文:檢查欄位     
+        3-1. 查詢全部: 加入tag篩選+關鍵字
     
-       
-        
 ## 技術棧
 - express --no view
 - mongoose
