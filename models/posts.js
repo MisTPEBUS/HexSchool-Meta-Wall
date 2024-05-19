@@ -2,18 +2,18 @@ const mongoose = require('mongoose');
 const postSchema = new mongoose.Schema(
   {
     user: {
-      type: String,
+      type: mongoose.Schema.ObjectId,
       ref: 'User',
       required: [true, '名字 未填寫']
     }, 
-
-    userPhoto: {
-      type: String,
-      default: ""
-    },
+   
     content: {
       type: String,
       required: [true, 'Content 未填寫']
+    },
+    userPhoto: {
+      type: String,
+      default: ""
     },
     image: {
       type: String,
