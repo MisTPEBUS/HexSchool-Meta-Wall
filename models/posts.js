@@ -4,6 +4,7 @@ const postSchema = new mongoose.Schema(
     user: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
+      select: false,
       required: [true, '名字 未填寫']
     }, 
    
