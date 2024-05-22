@@ -1,12 +1,12 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const Post = require("../models/posts");
 
 //查詢全部貼文
 router.get('/', async function (req, res, next) {
     const { timeSort, keyWord } = req.query;
     //設定排序為時間近到遠還是遠道近(預設時間近期貼文)
-    const tSort = timeSort == "asc" ? "createdAt" : "-createdAt"
+    const tSort = timecSort == "asc" ? "createdAt" : "-createdAt"
     let query = {};
 
     //關鍵字針對Model中userName + content 搜尋
@@ -39,12 +39,12 @@ router.get('/', async function (req, res, next) {
 router.get('/:id', async function (req, res, next) {
     const { id } = req.params;
     try {
-        const posts = await Post.findById(id);
+        const post = await Post.findById(id);
 
         res.status(200).json({
             success: true,
             message: "搜尋成功",
-            posts: posts
+            posts: post
         })
     } catch (err) {
         console.log(err)
@@ -60,14 +60,14 @@ router.get('/:id', async function (req, res, next) {
 router.post('/', async function (req, res, next) {
     const { content }  = req.body;
     try {
-        if (!postToDelete) {
+        if (!content.trim()) {
             return res.status(400).json({
                 success: false,
                 message: `content不能為空值!`,
             })
         }
         const newPost = await Post.create(req.body);
-        console.log(newPost)
+        
         res.status(200).json({
             success: true,
             message: "已建立貼文",
@@ -91,7 +91,7 @@ router.put('/:id', async function (req, res, next) {
     const { content } = req.body;
 
     try {
-        if (!content) {
+        if (!content.trim()) {
             return res.status(400).json({
                 success: false,
                 message: `Content不得為空值!`,
