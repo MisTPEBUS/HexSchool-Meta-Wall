@@ -6,7 +6,7 @@ const Post = require("../models/posts");
 router.get('/', async function (req, res, next) {
     const { timeSort, keyWord } = req.query;
     //設定排序為時間近到遠還是遠道近(預設時間近期貼文)
-    const tSort = timecSort == "asc" ? "createdAt" : "-createdAt"
+    const tSort = timeSort == "asc" ? "createdAt" : "-createdAt"
     let query = {};
 
     //關鍵字針對Model中userName + content 搜尋
