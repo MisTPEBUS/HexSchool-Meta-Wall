@@ -38,7 +38,7 @@ router.get('/:id', async function (req, res) {
 //新增貼文
 router.post('/', async function (req, res) {
     const { content } = req.body;
-    console.log(content)
+    
     try {
         if (!content.trim()) {
             return resHandler.Error(res, 400, { message: `content不能為空值!` });
