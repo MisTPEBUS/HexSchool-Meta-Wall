@@ -1,14 +1,14 @@
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var cors = require('cors');
-var app = express();
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const cors = require('cors');
 
 const swaggerUI = require('swagger-ui-express');
 const swaggerFile = require('./swagger_output.json');
 
 const postRouter = require('./routes/posts');
+var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const dotenv = require('dotenv');
 
@@ -32,6 +32,7 @@ mongoose
   .connect(constr)
   .then(() => console.log("連線資料成功"));
 
+  const app = express();
 
 
 app.use(cors());
@@ -41,6 +42,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api-doc', swaggerUI.serve, swaggerUI.setup(swaggerFile));
+app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/posts', postRouter);
 
