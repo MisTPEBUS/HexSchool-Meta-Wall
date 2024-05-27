@@ -1,37 +1,32 @@
-// res success handleResponse
-const Success = (res,message = '',  status = 200,data = '') => {
-  res.status(status).json({
-    success: true,
-    message,
-    data
-  });
+//  success Response
+const Success = (res, message = '', data = '', status = 200) => {
+  if(status === 204){
+    res.status(status).json({
+      success: true,
+      message
+    });
+  }
+  else {
+    res.status(status).json({
+      success: true,
+      message,
+      data
+    });
+  }
 };
 
-
-
-
-// res error handleErrorResponse
-const Error = (res, status = 400, error) => {
-
-  res.status(status).send({
-    success: false,
-    message: error.message,
-  });
-};
-
-// res error handleErrorResponse
-const NotFound = (res, status = 404, error) => {
-  res.status(status).send({
-    success: false,
-    message: error.message,
-  });
-};
-
-
-// 自訂錯誤
-const appError = (httpStatus, errMessage, next) => {
+// NotFound Response
+const NotFound = (errMessage, next) => {
   const error = new Error(errMessage);
-  error.status = httpStatus;
+  error.statusCode = 404;
+  error.isOperational = true;
+  next(error);
+};
+
+// Error Response
+const appError = (errMessage, next, httpStatus = 400) => {
+  const error = new Error(errMessage);
+  error.statusCode = httpStatus;
   error.isOperational = true;
   next(error);
 };
@@ -54,7 +49,7 @@ const handleAppMainErrorResponse = (env, err, res) => {
     } else {
       // log 紀錄
       console.error('出現重大錯誤', err);
-      0
+
       res.status(500).json({
         status: 'error',
         message: '系統錯誤，請恰系統管理員'
@@ -76,7 +71,6 @@ const handleErrorAsync = function handleErrorAsync(func) {
 
 module.exports = {
   Success,
-  Error,
   NotFound,
   appError,
   handleAppMainErrorResponse,
