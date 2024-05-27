@@ -6,8 +6,7 @@ const postSchema = new mongoose.Schema(
       ref: 'User',
       select: false,
       required: [true, '名字 未填寫']
-    }, 
-   
+    },
     content: {
       type: String,
       required: [true, 'Content 未填寫']
@@ -16,6 +15,11 @@ const postSchema = new mongoose.Schema(
       type: String,
       default: ""
     },
+    likes: [{
+      type: mongoose.Schema.ObjectId,
+      ref: "User", // 填寫 model name
+    }],
+    tags: [{ type:String }],
     image: {
       type: String,
       default: ""
@@ -24,10 +28,10 @@ const postSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-  },{
-    versionKey:false,
-    strictPopulate:false
-  }
+  }, {
+  versionKey: false,
+  strictPopulate: false
+}
 );
 const Post = mongoose.model('Post', postSchema);
 
