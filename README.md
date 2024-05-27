@@ -37,7 +37,7 @@ HexSchool-Meta-Wall
 - 目前查詢的部分有一些錯誤導致無法查詢，例如沒有導入 `User`，`Schema` 也有錯誤的部分，但是 Render 是可以查詢的。
 
 ### Week 5 Express Middleware 異常狀態處理
-1. 設計一個 Middleware，讓 Controller 程式碼中不需要使用 `try catch`
+1. 設計一個 Middleware，讓程式碼中不需要使用 `try catch`
 2. 透過環境變數設定在開發和生產環境下的不同回饋訊息
 3. 客製化各種錯誤狀態，包括 NPM 的錯誤訊息
 4. 使用 `node.js` 的 `uncaughtException` 和 `unhandledRejection` 來捕捉預期外的錯誤
