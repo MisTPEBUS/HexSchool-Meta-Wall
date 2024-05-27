@@ -1,18 +1,12 @@
 //  success Response
 const Success = (res, message = '', data = '', status = 200) => {
-  if(status === 204){
-    res.status(status).json({
-      success: true,
-      message
-    });
-  }
-  else {
-    res.status(status).json({
-      success: true,
-      message,
-      data
-    });
-  }
+
+  res.status(status).json({
+    success: true,
+    message,
+    data
+  });
+
 };
 
 // NotFound Response
