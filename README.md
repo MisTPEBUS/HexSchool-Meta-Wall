@@ -42,6 +42,11 @@ HexSchool-Meta-Wall
 3. 客製化各種錯誤狀態，包括 NPM 的錯誤訊息
 4. 使用 `node.js` 的 `uncaughtException` 和 `unhandledRejection` 來捕捉預期外的錯誤
 
+**助教補充:**
+- GET 貼文的搜尋功能（keyWord）目前無法運作，這個部分可再檢查看看哩
+- 因為這份作業最後呈現的是貼文牆，所以會建議補上 tags、likes 、type 等資料欄位，以接續後續的作業進行。
+- 貼文部分少了一支刪除全部貼文的 API，建議要補上唷～（後續作業會審核到這個部分，如果沒有補上則之後會被審核失敗哩）
+
 ## 技術棧
 - express --no view
 - mongoose
