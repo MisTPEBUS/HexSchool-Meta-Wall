@@ -47,6 +47,23 @@ HexSchool-Meta-Wall
 - 因為這份作業最後呈現的是貼文牆，所以會建議補上 tags、likes 、type 等資料欄位，以接續後續的作業進行。
 - 貼文部分少了一支刪除全部貼文的 API，建議要補上唷～（後續作業會審核到這個部分，如果沒有補上則之後會被審核失敗哩）
 
+## Week 6 Express Middleware 異常狀態處理
+1. LV1：設計五個 API
+- [x] POST：{url}/users/sign_up：註冊
+- [x] POST：{url}/users/sign_in：登入
+- [ ] POST：{url}/users/updatePassword: 重設密碼
+- [ ] GET：{url}/users/profile: 取得個人資料，需設計 isAuth middleware。
+- [ ] PATCH：{url}/users/profile: 更新個人資料，需設計 isAuth middleware
+
+- 額外
+- [ ] GET：{url}/users/profile: 登出。
+- [ ] PATCH：{url}/users/profile: JWT驗證
+
+2. LV2：調整第四週 API，都加上登入驗證的 middleware
+- [ ] POST：{url}/posts/：張貼個人動態
+- [ ] GET：{url}/posts/：觀看所有動態
+- [ ] swagger文件
+
 ## 技術棧
 - express --no view
 - mongoose
