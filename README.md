@@ -67,6 +67,17 @@ HexSchool-Meta-Wall
 ## 技術棧
 - express --no view
 - mongoose
+	
+- dotenv			
+	
+- swagger-autogen	
+- swagger-jsdoc		
+- swagger-ui-express
+
+- jsonwebtoken	
+- validator	
+- bcrypt		
+
 
 
 ## 安裝指南
