@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema(
     },   
     sex: {
       type: String,
-      enum:["maile", "female"],
+      enum:["male", "female"],
       required: [true, '性別 未填寫']
     },
     email: {
@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema(
     followers: [
       {
         email: { 
-          type: string,
+          type: String,
           ref: 'User'
         },
         createdAt: {
