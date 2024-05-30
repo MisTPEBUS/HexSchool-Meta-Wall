@@ -42,8 +42,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api-doc', swaggerUI.serve, swaggerUI.setup(swaggerFile));
-app.use('/users', usersRouter);
-app.use('/posts', postRouter);
+app.use('/v1/api', usersRouter);
+app.use('/v1/api/posts', postRouter);
 
 // 404 錯誤
 app.use(function (req, res, next) {
