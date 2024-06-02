@@ -38,8 +38,9 @@ const isAuth = handleErrorAsync(async (req, res, next) => {
     return next(appError('Token格式異常請重新登入！', next));
   }
 
+  //驗證token是否deny
   const hasBlackList = await BlackList.findById(decoded.id);
-  if (!hasBlackList) {
+  if (hasBlackList) {
     return next(appError('Token逾時請重新登入', next));
   }
 
@@ -60,9 +61,11 @@ const generateSendJWT = (user, statusCode, res) => {
   user.password = undefined;
   res.status(statusCode).json({
     status: 'true',
-    user: {
-      token,
-      name: user.name
+    data:{
+      user: {
+        token,
+        name: user.name
+      }
     }
   });
 }
