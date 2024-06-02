@@ -106,7 +106,7 @@ router.post('/sign_up', handleErrorAsync(async (req, res, next) => {
          } 
  
   }
-  #swagger.responses[200] = { 
+  #swagger.responses[201] = { 
     schema: {
         "status": "true",
         "data": {
@@ -264,10 +264,6 @@ router.patch('/user/updatePassword', isAuth, handleErrorAsync(async (req, res, n
                  schema: {
                      type: "object",
                      properties: {
-                          email: {
-                             type: "string",
-                              example: "Lobinda123@test.com"
-                         },
                           password: {
                              type: "string",
                              description: "至少要8碼",
@@ -279,7 +275,7 @@ router.patch('/user/updatePassword', isAuth, handleErrorAsync(async (req, res, n
                              example: "1q2w3e4r"
                          },
                      },
-                     required: ["email", "password", "confirmPassword"]
+                     required: [ "password", "confirmPassword"]
                  }  
              }
              }
