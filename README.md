@@ -51,18 +51,23 @@ HexSchool-Meta-Wall
 1. LV1：設計五個 API
 - [x] POST：{url}/users/sign_up：註冊
 - [x] POST：{url}/users/sign_in：登入
-- [ ] POST：{url}/users/updatePassword: 重設密碼
-- [ ] GET：{url}/users/profile: 取得個人資料，需設計 isAuth middleware。
-- [ ] PATCH：{url}/users/profile: 更新個人資料，需設計 isAuth middleware
+- [x] POST：{url}/users/updatePassword: 重設密碼
+- [x] GET：{url}/users/profile: 取得個人資料，需設計 isAuth middleware。
+- [x] PATCH：{url}/users/profile: 更新個人資料，需設計 isAuth middleware
 
 - 額外
-- [ ] GET：{url}/users/profile: 登出。
-- [ ] PATCH：{url}/users/profile: JWT驗證
+- [x] GET：{url}/users/profile: 登出。
 
 2. LV2：調整第四週 API，都加上登入驗證的 middleware
-- [ ] POST：{url}/posts/：張貼個人動態
-- [ ] GET：{url}/posts/：觀看所有動態
-- [ ] swagger文件
+- [x] GET：{url}/posts/：觀看所有動態
+- [x] GET：{url}/posts/:id：觀看指定動態
+- [x] POST：{url}/posts/：張貼個人動態
+- [x] PUT：{url}/posts/:id：修改動態內容
+- [x] DELETE：{url}/posts/:id：刪除指定動態
+- [x] DELETE：{url}/posts/ALL：刪除個人所有動態
+
+3. swagger文件
+- [x] swagger文件
 
 ## 技術棧
 - express --no view
