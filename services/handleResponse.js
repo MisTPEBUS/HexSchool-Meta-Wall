@@ -63,7 +63,6 @@ const handleErrorAsync = function handleErrorAsync(func) {
   };
 };
 
-
 module.exports = {
   Success,
   NotFound,
