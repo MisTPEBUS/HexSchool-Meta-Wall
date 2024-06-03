@@ -75,6 +75,13 @@ HexSchool-Meta-Wall
 - [ ]需通過 isAuth 登入驗證 middleware 才可上傳
 
 
+
+開啟一個 Firebase 專案
+建立 ENV 檔，放入環境變數，並新增一個 firebase.js 設置 firebase 環境初始化
+設置一個 images.js 的 middleware，來過濾資訊
+在 upload.js 設置整合 Firebase 上傳功能
+
+
 ## 技術棧
 - express --no view
 - mongoose

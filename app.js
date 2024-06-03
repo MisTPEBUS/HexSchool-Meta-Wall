@@ -10,6 +10,7 @@ const swaggerFile = require('./swagger_output.json');
 const postRouter = require('./routes/posts');
 const usersRouter = require('./routes/users');
 const dotenv = require('dotenv');
+const uploadRouter = require('./routes/upload');
 
 dotenv.config({ path: './config.env' });
 const mongoose = require('mongoose');
@@ -42,6 +43,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api-doc', swaggerUI.serve, swaggerUI.setup(swaggerFile));
+app.use('/v1/api/upload', uploadRouter);
 app.use('/v1/api', usersRouter);
 app.use('/v1/api/posts', postRouter);
 
