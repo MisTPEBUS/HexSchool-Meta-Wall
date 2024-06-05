@@ -19,7 +19,7 @@ const postSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "User", // 填寫 model name
     }],
-    tags: [{ type:String }],
+    tags: [{ type: String }],
     image: {
       type: String,
       default: ""

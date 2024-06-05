@@ -32,7 +32,7 @@ mongoose
   .connect(constr)
   .then(() => console.log("連線資料成功"));
 
-  const app = express();
+const app = express();
 
 
 app.use(cors());
@@ -56,7 +56,7 @@ app.use(function (req, res, next) {
 });
 // 自己設定的 err 錯誤 
 const resErrorProd = (err, res) => {
-  
+
   if (err.isOperational) {
     res.status(err.statusCode).json({
       status: false,
@@ -79,29 +79,29 @@ const resErrorDev = (err, res) => {
   });
 };
 // 錯誤處理
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // dev
-  
+
   err.statusCode = err.statusCode || 500;
   if (process.env.NODE_ENV === 'dev') {
     return resErrorDev(err, res);
-  } 
+  }
 
   // production
   else if (process.env.NODE_ENV === 'production') {
-        if (err.name === 'ValidationError'){
-            err.message = "欄位未填寫正確";
-            err.isOperational = true;
-            return resErrorProd(err, res)
-        }
-        resErrorProd(err, res)
+    if (err.name === 'ValidationError') {
+      err.message = "欄位未填寫正確";
+      err.isOperational = true;
+      return resErrorProd(err, res)
     }
+    resErrorProd(err, res)
+  }
 });
 
 // 未捕捉到的 catch 
 process.on('unhandledRejection', (reason, promise) => {
   console.error('未捕捉到的 rejection：', promise, '原因：', reason);
-  
+
 });
 
 module.exports = app;

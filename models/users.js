@@ -4,13 +4,13 @@ const userSchema = new mongoose.Schema(
     name: {
       type: String,
       required: [true, '名字 未填寫']
-    }, 
-    photo:{
-        type: String
-    },   
+    },
+    photo: {
+      type: String
+    },
     sex: {
       type: String,
-      enum:["male", "female"],
+      enum: ["male", "female"],
       required: [true, '性別 未填寫']
     },
     email: {
@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema(
     },
     followers: [
       {
-        email: { 
+        email: {
           type: String,
           ref: 'User'
         },
@@ -45,7 +45,7 @@ const userSchema = new mongoose.Schema(
     },
   }, {
   versionKey: false,
-  
+
 }
 );
 const User = mongoose.model('User', userSchema);

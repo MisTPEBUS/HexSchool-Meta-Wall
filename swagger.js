@@ -1,4 +1,4 @@
-const swaggerAutogen = require('swagger-autogen')({openapi: '3.0.0'});
+const swaggerAutogen = require('swagger-autogen')({ openapi: '3.0.0' });
 
 const doc = {
     info: {
@@ -18,11 +18,11 @@ const doc = {
     ],
     tags: [                   // by default: empty Array
         {
-            name: "使用者登入驗證",  
+            name: "使用者登入驗證",
             description: "Users&Auth"
         },
         {
-            name: '貼文牆管理',  
+            name: '貼文牆管理',
             description: "Posts"
         },
 
@@ -31,7 +31,7 @@ const doc = {
             description: "Upload"
         },
     ],
-   
+
     components: {
         securitySchemes: {
             bearerAuth: {
@@ -41,7 +41,7 @@ const doc = {
             }
         }
     },
-   
+
 
 };
 
