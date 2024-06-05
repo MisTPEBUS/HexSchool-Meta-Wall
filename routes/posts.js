@@ -142,7 +142,7 @@ router.get('/personal', isAuth, handleErrorAsync(async (req, res, next) => {
 }));
 
 //查詢單一貼文
-router.get('/:id', isAuth, handleErrorAsync(async (req, res, next) => {
+router.get('/:id', handleErrorAsync(async (req, res, next) => {
   const { id } = req.params;
 
   if (!id) {
@@ -154,7 +154,7 @@ router.get('/:id', isAuth, handleErrorAsync(async (req, res, next) => {
   }
   const postToSearch = await Post.findById(id);
   if (!postToSearch) {
-    return next(NotFound(`此貼文ID:${id}不存在!`, next));
+    return Success(res, '', '', 204);
   }
   Success(res, '', postToSearch);
 
@@ -316,7 +316,7 @@ router.patch('/:id', isAuth, handleErrorAsync(async (req, res, next) => {
         req.body,
         { new: true });
   if (!postToUpdate) {
-    return next(appError(`此貼文ID:${id}不存在!`, next));
+    return Success(res, '', '', 204);
   }
 
   Success(res, `已修改貼文!`, postToUpdate, 200);
@@ -423,7 +423,7 @@ router.delete('/:id', isAuth, handleErrorAsync(async (req, res, next) => {
   );
 
   if (!postToDelete) {
-    return next(NotFound(`此貼文ID:${id}不存在!`, next));
+    return Success(res, '', '', 204);
   }
 
   Success(res, `貼文ID:${id} 已刪除!`);
