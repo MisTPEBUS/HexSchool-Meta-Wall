@@ -125,7 +125,7 @@ router.post('/sign_up', handleErrorAsync(async (req, res, next) => {
     } 
  */
 
-  }));
+}));
 
 //登入
 router.post('/sign_in', handleErrorAsync(async (req, res, next) => {
@@ -207,7 +207,7 @@ router.post('/sign_in', handleErrorAsync(async (req, res, next) => {
     } 
  */
 
-  }));
+}));
 
 
 //更新密碼
@@ -419,7 +419,7 @@ router.patch('/user/profile', isAuth, handleErrorAsync(async (req, res, next) =>
     req.body,
     { new: true });
   if (!updateToUser) {
-    return next(appError( `此ID:${id}不存在!`, next));
+    return next(appError(`此ID:${id}不存在!`, next));
   }
 
   Success(res, `已修改個人資料!`, updateToUser, 200);
