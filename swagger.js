@@ -25,6 +25,11 @@ const doc = {
             name: '貼文牆管理',  
             description: "Posts"
         },
+
+        {
+            name: '圖片上傳',  
+            description: "Upload"
+        },
     ],
    
     components: {

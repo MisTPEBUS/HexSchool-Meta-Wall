@@ -23,9 +23,151 @@
     {
       "name": "貼文牆管理",
       "description": "Posts"
+    },
+    {
+      "name": "圖片上傳",
+      "description": "Upload"
     }
   ],
   "paths": {
+    "/v1/api/upload": {
+      "post": {
+        "tags": [
+          "圖片上傳"
+        ],
+        "summary": "圖片上傳",
+        "description": "圖片上傳",
+        "parameters": [
+          {
+            "name": "200",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "true"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user": {
+                          "type": "object",
+                          "properties": {
+                            "token": {
+                              "type": "string",
+                              "example": "eyJhbGciOiJ..........mDWPvJZSxu98W4"
+                            },
+                            "name": {
+                              "type": "string",
+                              "example": "Lobinda"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "true"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user": {
+                          "type": "object",
+                          "properties": {
+                            "token": {
+                              "type": "string",
+                              "example": "eyJhbGciOiJ..........mDWPvJZSxu98W4"
+                            },
+                            "name": {
+                              "type": "string",
+                              "example": "Lobinda"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Error Msg"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Error Msg"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/api/sign_up": {
       "post": {
         "tags": [
@@ -476,10 +618,6 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "email": {
-                    "type": "string",
-                    "example": "Lobinda123@test.com"
-                  },
                   "password": {
                     "type": "string",
                     "description": "至少要8碼",
@@ -492,7 +630,6 @@
                   }
                 },
                 "required": [
-                  "email",
                   "password",
                   "confirmPassword"
                 ]
