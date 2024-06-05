@@ -316,7 +316,7 @@ router.patch('/:id', isAuth, handleErrorAsync(async (req, res, next) => {
                 req.body,
                 { new: true });
     if (!postToUpdate) {
-        return next(appError(404, `此貼文ID:${id}不存在!`, next));
+        return next(appError( `此貼文ID:${id}不存在!`, next));
     }
 
     Success(res, `已修改貼文!`, postToUpdate, 200);
