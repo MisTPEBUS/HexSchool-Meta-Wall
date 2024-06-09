@@ -1,20 +1,25 @@
 const mongoose = require('mongoose');
 const postSchema = new mongoose.Schema(
   {
-    userName: {
-      type: String,
-      required: [true, '貼文姓名未填寫'],
-      unique: true
-    },
-
-    userPhoto: {
-      type: String,
-      default: ""
+    user: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+      select: false,
+      required: [true, '名字 未填寫']
     },
     content: {
       type: String,
       required: [true, 'Content 未填寫']
     },
+    userPhoto: {
+      type: String,
+      default: ""
+    },
+    likes: [{
+      type: mongoose.Schema.ObjectId,
+      ref: "User", // 填寫 model name
+    }],
+    tags: [{ type: String }],
     image: {
       type: String,
       default: ""
@@ -23,9 +28,10 @@ const postSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-  },{
-    versionKey:false
-  }
+  }, {
+  versionKey: false,
+  strictPopulate: false
+}
 );
 const Post = mongoose.model('Post', postSchema);
 

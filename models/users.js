@@ -4,13 +4,14 @@ const userSchema = new mongoose.Schema(
     name: {
       type: String,
       required: [true, '名字 未填寫']
-    }, 
-    photo:{
-        type: String
-    },   
+    },
+    photo: {
+      type: String
+    },
     sex: {
       type: String,
-      enum:["maile", "female"]
+      enum: ["male", "female"],
+      required: [true, '性別 未填寫']
     },
     email: {
       type: String,
@@ -21,10 +22,22 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, '請輸入密碼'],
+      required: [true, '密碼 未填寫'],
       minlength: 8,
       select: false
     },
+    followers: [
+      {
+        email: {
+          type: String,
+          ref: 'User'
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now
+        }
+      }
+    ],
     createdAt: {
       type: Date,
       default: Date.now,
@@ -32,7 +45,7 @@ const userSchema = new mongoose.Schema(
     },
   }, {
   versionKey: false,
-  
+
 }
 );
 const User = mongoose.model('User', userSchema);
