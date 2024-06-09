@@ -665,6 +665,46 @@
 							"response": []
 						}
 					]
+				},
+				{
+					"name": "圖片上傳",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NjA5NWUxZWE2ZWI0MWI1ZDU0NDBhNCIsImlhdCI6MTcxNzc3Mjc2OSwiZXhwIjoxNzE3ODU5MTY5fQ.Atx3uyxGXtUPtE6A3CgZPkeQGK0Y2BHKZFRXtTxA70A"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "",
+									"type": "file",
+									"src": "/C:/Users/User/Documents/0818_2382.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:2330/v1/api/upload/file",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "2330",
+							"path": [
+								"v1",
+								"api",
+								"upload",
+								"file"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -1133,8 +1173,7 @@
 								"header": [
 									{
 										"key": "Authorization",
-										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NjA5NWUxZWE2ZWI0MWI1ZDU0NDBhNCIsImlhdCI6MTcxNzYwNTg2MywiZXhwIjoxNzE3NjkyMjYzfQ.rEAj1ozVCZxQV15gpS_imDvGFhqqAoXl68eJAWFDrQA",
-										"type": "text"
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NjA5NWUxZWE2ZWI0MWI1ZDU0NDBhNCIsImlhdCI6MTcxNzYwNTg2MywiZXhwIjoxNzE3NjkyMjYzfQ.rEAj1ozVCZxQV15gpS_imDvGFhqqAoXl68eJAWFDrQA"
 									}
 								],
 								"body": {
@@ -1316,6 +1355,44 @@
 							"response": []
 						}
 					]
+				},
+				{
+					"name": "圖片上傳 Copy",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NjA5NWUxZWE2ZWI0MWI1ZDU0NDBhNCIsImlhdCI6MTcxNzkwMjE1OCwiZXhwIjoxNzE3OTg4NTU4fQ.ORHV4ZBOlcyModou9DmAhxA5DD-8FUaZafMnDR32n1A",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/User/Documents/3.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://hexschool-meta-wall.onrender.com/v1/api/upload",
+							"protocol": "https",
+							"host": [
+								"hexschool-meta-wall",
+								"onrender",
+								"com"
+							],
+							"path": [
+								"v1",
+								"api",
+								"upload"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}
