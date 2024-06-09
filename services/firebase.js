@@ -1,8 +1,6 @@
 const dotenv = require('dotenv');
 dotenv.config({ path: './config.env' });
 const admin = require("firebase-admin");
-
-// Firebase Admin  金鑰內容
 const config = {
   type: process.env.FIREBASE_TYPE,
   project_id: process.env.FIREBASE_PROJECT_ID,
@@ -16,11 +14,9 @@ const config = {
   client_x509_cert_url: process.env.FIREBASE_CLIENT_X509_CERT_URL,
 };
 
-// 初始化
 admin.initializeApp({
-  credential: admin.credential.cert(config),  // 設定身份驗證，可授予 Firebase 服務的管理員存取權
-  storageBucket: `${process.env.FIREBASE_PROJECT_ID}.appspot.com`, 
-  // 設定儲存桶位置（要存放在哪個專案，FIREBASE_PROJECT_ID 即為專案名稱）
+  credential: admin.credential.cert(config),
+  storageBucket: `${process.env.FIREBASE_PROJECT_ID}.appspot.com`,
 });
 
 module.exports = admin;

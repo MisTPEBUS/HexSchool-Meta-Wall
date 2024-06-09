@@ -39,14 +39,6 @@
         "description": "圖片上傳",
         "parameters": [
           {
-            "name": "200",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "authorization",
             "in": "header",
             "schema": {
@@ -63,26 +55,12 @@
                   "type": "object",
                   "properties": {
                     "status": {
-                      "type": "string",
-                      "example": "true"
+                      "type": "boolean",
+                      "example": true
                     },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "user": {
-                          "type": "object",
-                          "properties": {
-                            "token": {
-                              "type": "string",
-                              "example": "eyJhbGciOiJ..........mDWPvJZSxu98W4"
-                            },
-                            "name": {
-                              "type": "string",
-                              "example": "Lobinda"
-                            }
-                          }
-                        }
-                      }
+                    "imageUrl": {
+                      "type": "string",
+                      "example": "image URL(https)"
                     }
                   },
                   "xml": {
@@ -95,26 +73,12 @@
                   "type": "object",
                   "properties": {
                     "status": {
-                      "type": "string",
-                      "example": "true"
+                      "type": "boolean",
+                      "example": true
                     },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "user": {
-                          "type": "object",
-                          "properties": {
-                            "token": {
-                              "type": "string",
-                              "example": "eyJhbGciOiJ..........mDWPvJZSxu98W4"
-                            },
-                            "name": {
-                              "type": "string",
-                              "example": "Lobinda"
-                            }
-                          }
-                        }
-                      }
+                    "imageUrl": {
+                      "type": "string",
+                      "example": "image URL(https)"
                     }
                   },
                   "xml": {
@@ -162,6 +126,30 @@
                     "name": "main"
                   }
                 }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "貼文牆",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "file"
+                  }
+                },
+                "required": [
+                  "file"
+                ]
               }
             }
           }
@@ -1683,13 +1671,6 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "authorization",
-            "in": "header",
             "schema": {
               "type": "string"
             }
