@@ -82,14 +82,9 @@ HexSchool-Meta-Wall
 
 ## Week 7 firebase 第三方圖床服務 API 介接
 
-- [ ] 介接 firebase 第三方圖床服務
-- [ ] 設計一個 /upload 路由，來設計上傳圖片功能，後端得驗證是否符合 2mb 限制、格式支援 jpg、png
-- [ ]需通過 isAuth 登入驗證 middleware 才可上傳
-
-開啟一個 Firebase 專案
-建立 ENV 檔，放入環境變數，並新增一個 firebase.js 設置 firebase 環境初始化
-設置一個 images.js 的 middleware，來過濾資訊
-在 upload.js 設置整合 Firebase 上傳功能
+- [x] 介接 firebase 第三方圖床服務
+- [x] 設計一個 /upload 路由，來設計上傳圖片功能，後端得驗證是否符合 2mb 限制、格式支援 jpg、png
+- [x]需通過 isAuth 登入驗證 middleware 才可上傳
 
 ## 技術棧
 
