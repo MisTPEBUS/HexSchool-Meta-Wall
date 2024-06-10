@@ -94,10 +94,10 @@ HexSchool-Meta-Wall
 會員功能
 
 - [x] [POST]註冊會員：{url}/user/sign_up
-- [ ] [POST]登入會員：{url}/users/sign_in
-- [ ] [PATCH]重設密碼：{url}/users/updatePassword
-- [ ] [GET]取得個人資料：{url}/users/profile
-- [ ] [PATCH]更新個人資料：{url}/users/profile
+- [x] [POST]登入會員：{url}/users/sign_in
+- [x] [PATCH]重設密碼：{url}/users/updatePassword
+- [x] [GET]取得個人資料：{url}/users/profile
+- [x] [PATCH]更新個人資料：{url}/users/profile
 
 會員按讚追蹤動態
 
@@ -108,16 +108,16 @@ HexSchool-Meta-Wall
 
 動態貼文
 
-- [ ] [GET]取得所有貼文：{url}/posts
-- [ ] [GET]取得單一貼文：{url}/posts/{postID}
-- [ ] [POST]新增貼文：{url}/posts
+- [x] [GET]取得所有貼文：{url}/posts
+- [x] [GET]取得單一貼文：{url}/posts/{postID}
+- [x] [POST]新增貼文：{url}/posts
 - [ ] [POST]新增一則貼文的讚：{url}/posts/{postID}/like
 - [ ] [DELETE]取消一則貼文的讚：{url}/posts/{postID}/unlike
 - [ ] [POST]新增一則貼文的留言：{url}/posts/{postID}/comment
-- [ ] [GET]取得個人所有貼文列表：{url}/post/user/{userID}
+- [x] [GET]取得個人所有貼文列表：{url}/post/user/{userID}
       其他
 
-- [ ] [POST]上傳圖片：{url}/upload
+- [x] [POST]圖片上傳：{url}/upload
 
 ## 技術棧
 
