@@ -1,12 +1,10 @@
 //  success Response
-const Success = (res, message = '', data = '', status = 200) => {
-
+const Success = (res, message = "", data = "", status = 200) => {
   res.status(status).json({
     success: true,
     message,
-    data
+    data,
   });
-
 };
 
 // NotFound Response
@@ -27,26 +25,26 @@ const appError = (errMessage, next, httpStatus = 400) => {
 
 // 回傳 Express 應用程式錯誤處理
 const handleAppMainErrorResponse = (env, err, res) => {
-  if (env === 'dev') {
+  if (env === "dev") {
     // 開發環境錯誤
     res.status(err.status || 500).json({
-      message: err.message || '系統錯誤',
+      message: err.message || "系統錯誤",
       error: err,
-      stack: err.stack
+      stack: err.stack,
     });
   } else {
     // 正式環境錯誤
     if (err.isOperational) {
       res.status(err.status || 500).json({
-        message: err.message
+        message: err.message,
       });
     } else {
       // log 紀錄
-      console.error('出現重大錯誤', err);
+      console.error("出現重大錯誤", err);
 
       res.status(500).json({
-        status: 'error',
-        message: '系統錯誤，請恰系統管理員'
+        status: "error",
+        message: "系統錯誤，請恰系統管理員",
       });
     }
   }
@@ -55,11 +53,9 @@ const handleAppMainErrorResponse = (env, err, res) => {
 // 處理非同步錯誤
 const handleErrorAsync = function handleErrorAsync(func) {
   return function (req, res, next) {
-    func(req, res, next).catch(
-      function (error) {
-        return next(error);
-      }
-    );
+    func(req, res, next).catch(function (error) {
+      return next(error);
+    });
   };
 };
 
@@ -68,5 +64,5 @@ module.exports = {
   NotFound,
   appError,
   handleAppMainErrorResponse,
-  handleErrorAsync
+  handleErrorAsync,
 };

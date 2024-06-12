@@ -1,7 +1,7 @@
 // statusHandle/image.js
-const multer = require('multer');
-const path = require('path');
-const { appError, handleErrorAsync } = require('../services/handleResponse.js');
+const multer = require("multer");
+const path = require("path");
+const { appError, handleErrorAsync } = require("../services/handleResponse.js");
 
 //multer
 const upload = multer({
@@ -11,7 +11,7 @@ const upload = multer({
   },
   fileFilter(req, file, cb) {
     const ext = path.extname(file.originalname).toLowerCase();
-    if (ext !== '.jpg' && ext !== '.png' && ext !== '.jpeg') {
+    if (ext !== ".jpg" && ext !== ".png" && ext !== ".jpeg") {
       cb(new Error("檔案格式錯誤，僅限上傳 jpg、jpeg 與 png 格式。"));
     }
     cb(null, true);
@@ -25,10 +25,10 @@ const uploadMiddleware = handleErrorAsync(async (req, res, next) => {
       return next(appError(err.message, next));
     }
     if (!req.files || req.files.length === 0) {
-      return next(appError('檔案不能為空值', next));
+      return next(appError("檔案不能為空值", next));
     }
     if (req.files.length > 1) {
-      return next(appError('只能上傳一個文件', next));
+      return next(appError("只能上傳一個文件", next));
     }
     next();
   });

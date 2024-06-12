@@ -1,30 +1,36 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 const Post = require("../models/posts");
 const resHandler = require("../services/handleResponse");
-const mongoose = require('mongoose');
-const { Success, NotFound, appError } = require('../services/handleResponse.js');
-const { handleErrorAsync } = require('../services/handleResponse.js');
-const { isAuth } = require('../services/auth');
+const mongoose = require("mongoose");
+const {
+  Success,
+  NotFound,
+  appError,
+} = require("../services/handleResponse.js");
+const { handleErrorAsync } = require("../services/handleResponse.js");
+const { isAuth } = require("../services/auth");
 
 //查詢全部貼文
-router.get('/', handleErrorAsync(async (req, res, next) => {
-  const { timeSort, keyWord } = req.query;
-  const { user } = req.body
-  //設定排序為時間近到遠還是遠道近(預設時間近期貼文)
-  const tSort = timeSort == "asc" ? "createdAt" : "-createdAt"
-  let query = {};
-  //關鍵字針對Model中userName + content 搜尋
-  if (keyWord) {
-    query.$or = [
-      { content: new RegExp(keyWord, 'i') },
-      { user: { $in: user } },
-    ];
-  }
-  const posts = await Post.find(query).populate('User').sort(tSort);
-  Success(res, "", posts);
+router.get(
+  "/",
+  handleErrorAsync(async (req, res, next) => {
+    const { timeSort, keyWord } = req.query;
+    const { user } = req.body;
+    //設定排序為時間近到遠還是遠道近(預設時間近期貼文)
+    const tSort = timeSort == "asc" ? "createdAt" : "-createdAt";
+    let query = {};
+    //關鍵字針對Model中userName + content 搜尋
+    if (keyWord) {
+      query.$or = [
+        { content: new RegExp(keyWord, "i") },
+        { user: { $in: user } },
+      ];
+    }
+    const posts = await Post.find(query).populate("User").sort(tSort);
+    Success(res, "", posts);
 
-  /*
+    /*
  #swagger.tags =  ['貼文牆管理']
  #swagger.path = '/v1/api/posts'
  #swagger.method = 'get'
@@ -32,7 +38,7 @@ router.get('/', handleErrorAsync(async (req, res, next) => {
  #swagger.description = '查詢全部貼文'
  #swagger.produces = ["application/json"] 
 */
-  /*
+    /*
  
   #swagger.responses[200] = { 
     schema: {
@@ -52,31 +58,33 @@ router.get('/', handleErrorAsync(async (req, res, next) => {
       }
     } 
  */
-
-}));
+  }),
+);
 
 //查詢個人全部貼文
-router.get('/personal', isAuth, handleErrorAsync(async (req, res, next) => {
-  const { id } = req.user;
-  const { timeSort, keyWord } = req.query;
-  const { user } = req.body
-  //設定排序為時間近到遠還是遠道近(預設時間近期貼文)
-  const tSort = timeSort == "asc" ? "createdAt" : "-createdAt"
-  let query = {
-    user: id
-  };
-  //關鍵字針對Model中userName + content 搜尋
-  if (keyWord) {
-    query.$or = [
-      { content: new RegExp(keyWord, 'i') },
-      { user: { $in: user } },
-    ];
-  }
-  const posts = await Post.find(query).populate('User').sort(tSort);
-  Success(res, "", posts);
+router.get(
+  "/personal",
+  isAuth,
+  handleErrorAsync(async (req, res, next) => {
+    const { id } = req.user;
+    const { timeSort, keyWord } = req.query;
+    const { user } = req.body;
+    //設定排序為時間近到遠還是遠道近(預設時間近期貼文)
+    const tSort = timeSort == "asc" ? "createdAt" : "-createdAt";
+    let query = {
+      user: id,
+    };
+    //關鍵字針對Model中userName + content 搜尋
+    if (keyWord) {
+      query.$or = [
+        { content: new RegExp(keyWord, "i") },
+        { user: { $in: user } },
+      ];
+    }
+    const posts = await Post.find(query).populate("User").sort(tSort);
+    Success(res, "", posts);
 
-
-  /*
+    /*
    #swagger.tags =  ['貼文牆管理']
    #swagger.path = '/v1/api/posts/personal'
    #swagger.method = 'get'
@@ -87,7 +95,7 @@ router.get('/personal', isAuth, handleErrorAsync(async (req, res, next) => {
      "bearerAuth": []
  }]
  */
-  /* 
+    /* 
  
   #swagger.responses[200] = { 
     schema: {
@@ -137,28 +145,29 @@ router.get('/personal', isAuth, handleErrorAsync(async (req, res, next) => {
       }
     } 
  */
-
-
-}));
+  }),
+);
 
 //查詢單一貼文
-router.get('/:id', handleErrorAsync(async (req, res, next) => {
-  const { id } = req.params;
+router.get(
+  "/:id",
+  handleErrorAsync(async (req, res, next) => {
+    const { id } = req.params;
 
-  if (!id) {
-    return next(appError("傳入格式異常!請查閱API文件", next));
-  }
+    if (!id) {
+      return next(appError("傳入格式異常!請查閱API文件", next));
+    }
 
-  if (!id.trim() || !mongoose.Types.ObjectId.isValid(id)) {
-    return next(appError('id格式異常，請重新確認!', next));
-  }
-  const postToSearch = await Post.findById(id);
-  if (!postToSearch) {
-    return Success(res, '', '', 204);
-  }
-  Success(res, '', postToSearch);
+    if (!id.trim() || !mongoose.Types.ObjectId.isValid(id)) {
+      return next(appError("id格式異常，請重新確認!", next));
+    }
+    const postToSearch = await Post.findById(id);
+    if (!postToSearch) {
+      return Success(res, "", "", 204);
+    }
+    Success(res, "", postToSearch);
 
-  /*
+    /*
   #swagger.tags =  ['貼文牆管理']
   #swagger.path = '/v1/api/posts/{id}'
   #swagger.method = 'get'
@@ -169,7 +178,7 @@ router.get('/:id', handleErrorAsync(async (req, res, next) => {
     "bearerAuth": []
 }]
 */
-  /* 
+    /* 
  
   #swagger.responses[200] = { 
     schema: {
@@ -196,29 +205,31 @@ router.get('/:id', handleErrorAsync(async (req, res, next) => {
       }
     } 
  */
-
-}));
+  }),
+);
 
 //新增貼文
-router.post('/', isAuth, handleErrorAsync(async (req, res, next) => {
-  const { content } = req.body;
-  const { id } = req.user;
+router.post(
+  "/",
+  isAuth,
+  handleErrorAsync(async (req, res, next) => {
+    const { content } = req.body;
+    const { id } = req.user;
 
-  if (!content) {
-    return next(appError("傳入格式異常!請查閱API文件", next));
-  }
+    if (!content) {
+      return next(appError("傳入格式異常!請查閱API文件", next));
+    }
 
-  if (!content.trim()) {
-    return next(appError('Content不能為空值!', next));
+    if (!content.trim()) {
+      return next(appError("Content不能為空值!", next));
+    }
+    let addParams = { ...req.body };
+    addParams.user = id;
+    const newPost = await Post.create(addParams);
 
-  }
-  let addParams = { ...req.body };
-  addParams.user = id;
-  const newPost = await Post.create(addParams);
+    Success(res, "已建立貼文", newPost, 201);
 
-  Success(res, "已建立貼文", newPost, 201);
-
-  /*
+    /*
    #swagger.tags =  ['貼文牆管理']
    #swagger.path = '/v1/api/posts'
    #swagger.method = 'post'
@@ -229,7 +240,7 @@ router.post('/', isAuth, handleErrorAsync(async (req, res, next) => {
      "bearerAuth": []
  }]
  */
-  /* 
+    /* 
  #swagger.requestBody = {
              required: true,
              description:"貼文牆",
@@ -290,38 +301,37 @@ router.post('/', isAuth, handleErrorAsync(async (req, res, next) => {
       }
     } 
  */
-
-
-}));
+  }),
+);
 
 //更新貼文
-router.patch('/:id', isAuth, handleErrorAsync(async (req, res, next) => {
-  const { id } = req.params;
-  const { content } = req.body;
+router.patch(
+  "/:id",
+  isAuth,
+  handleErrorAsync(async (req, res, next) => {
+    const { id } = req.params;
+    const { content } = req.body;
 
-  if (!id || !content) {
-    return next(appError("傳入格式異常!請查閱API文件", next));
-  }
+    if (!id || !content) {
+      return next(appError("傳入格式異常!請查閱API文件", next));
+    }
 
-  if (!content.trim()) {
-    return next(appError('Content不得為空值!', next));
-  }
-  if (!id.trim() || !mongoose.Types.ObjectId.isValid(id)) {
-    return next(appError('id格式異常，請重新確認!', next));
-  }
-  const postToUpdate
-    = await Post.
-      findByIdAndUpdate(
-        { _id: id },
-        req.body,
-        { new: true });
-  if (!postToUpdate) {
-    return Success(res, '', '', 204);
-  }
+    if (!content.trim()) {
+      return next(appError("Content不得為空值!", next));
+    }
+    if (!id.trim() || !mongoose.Types.ObjectId.isValid(id)) {
+      return next(appError("id格式異常，請重新確認!", next));
+    }
+    const postToUpdate = await Post.findByIdAndUpdate({ _id: id }, req.body, {
+      new: true,
+    });
+    if (!postToUpdate) {
+      return Success(res, "", "", 204);
+    }
 
-  Success(res, `已修改貼文!`, postToUpdate, 200);
+    Success(res, `已修改貼文!`, postToUpdate, 200);
 
-  /*
+    /*
    #swagger.tags =  ['貼文牆管理']
    #swagger.path = '/v1/api/posts/{id}'
    #swagger.method = 'patch'
@@ -332,14 +342,14 @@ router.patch('/:id', isAuth, handleErrorAsync(async (req, res, next) => {
      "bearerAuth": []
  }]
  */
-  /*  #swagger.parameters['id'] = {
+    /*  #swagger.parameters['id'] = {
        in: 'path',
        type: 'string',
        required: true,
        description: '貼文ID'
    } */
 
-  /* 
+    /* 
  #swagger.requestBody = {
              required: true,
              description:"貼文牆",
@@ -400,35 +410,37 @@ router.patch('/:id', isAuth, handleErrorAsync(async (req, res, next) => {
       }
     } 
  */
-
-
-}));
+  }),
+);
 
 //刪除文章
-router.delete('/:id', isAuth, handleErrorAsync(async (req, res, next) => {
-  // query params
-  const { id } = req.params;
+router.delete(
+  "/:id",
+  isAuth,
+  handleErrorAsync(async (req, res, next) => {
+    // query params
+    const { id } = req.params;
 
-  if (!id) {
-    return next(appError("傳入格式異常!請查閱API文件", next));
-  }
+    if (!id) {
+      return next(appError("傳入格式異常!請查閱API文件", next));
+    }
 
-  if (!id.trim() || !mongoose.Types.ObjectId.isValid(id)) {
-    return next(appError('id格式異常，請重新確認!', next));
-  }
+    if (!id.trim() || !mongoose.Types.ObjectId.isValid(id)) {
+      return next(appError("id格式異常，請重新確認!", next));
+    }
 
-  const postToDelete = await Post.findByIdAndDelete(
-    { _id: id },
-    { new: true }  // 更新
-  );
+    const postToDelete = await Post.findByIdAndDelete(
+      { _id: id },
+      { new: true }, // 更新
+    );
 
-  if (!postToDelete) {
-    return Success(res, '', '', 204);
-  }
+    if (!postToDelete) {
+      return Success(res, "", "", 204);
+    }
 
-  Success(res, `貼文ID:${id} 已刪除!`);
+    Success(res, `貼文ID:${id} 已刪除!`);
 
-  /*
+    /*
   #swagger.tags =  ['貼文牆管理']
   #swagger.path = '/v1/api/posts/{id}'
   #swagger.method = 'delete'
@@ -439,14 +451,14 @@ router.delete('/:id', isAuth, handleErrorAsync(async (req, res, next) => {
     "bearerAuth": []
 }]
 */
-  /*  #swagger.parameters['id'] = {
+    /*  #swagger.parameters['id'] = {
        in: 'path',
        type: 'string',
        required: true,
        description: '貼文ID'
    } */
 
-  /* 
+    /* 
  
   #swagger.responses[200] = { 
     schema: {
@@ -462,31 +474,33 @@ router.delete('/:id', isAuth, handleErrorAsync(async (req, res, next) => {
       }
     } 
  */
-
-
-}));
+  }),
+);
 
 //刪除全部文章
-router.delete('/ALL', isAuth, handleErrorAsync(async (req, res, next) => {
-  // query params
-  const { id } = req.user;
+router.delete(
+  "/ALL",
+  isAuth,
+  handleErrorAsync(async (req, res, next) => {
+    // query params
+    const { id } = req.user;
 
-  if (!id.trim() || !mongoose.Types.ObjectId.isValid(id)) {
-    return next(appError('id格式異常，請重新確認!', next));
-  }
+    if (!id.trim() || !mongoose.Types.ObjectId.isValid(id)) {
+      return next(appError("id格式異常，請重新確認!", next));
+    }
 
-  const postToDelete = await Post.findByIdAndDelete(
-    { user: id },
-    { new: true }  // 更新
-  );
+    const postToDelete = await Post.findByIdAndDelete(
+      { user: id },
+      { new: true }, // 更新
+    );
 
-  if (!postToDelete) {
-    return next(NotFound(`貼文不存在!`, next));
-  }
+    if (!postToDelete) {
+      return next(NotFound(`貼文不存在!`, next));
+    }
 
-  Success(res, `貼文已刪除!`);
+    Success(res, `貼文已刪除!`);
 
-  /*
+    /*
   #swagger.tags =  ['貼文牆管理']
   #swagger.path = '/v1/api/posts/ALL'
   #swagger.method = 'delete'
@@ -497,7 +511,7 @@ router.delete('/ALL', isAuth, handleErrorAsync(async (req, res, next) => {
     "bearerAuth": []
 }]
 */
-  /*
+    /*
     #swagger.responses[200] = { 
       schema: {
            "success": true,
@@ -512,10 +526,7 @@ router.delete('/ALL', isAuth, handleErrorAsync(async (req, res, next) => {
         }
       } 
   */
-
-
-
-
-}));
+  }),
+);
 
 module.exports = router;

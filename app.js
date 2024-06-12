@@ -1,72 +1,69 @@
-const express = require('express');
-const path = require('path');
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
-const cors = require('cors');
+const express = require("express");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
+const cors = require("cors");
 
-const swaggerUI = require('swagger-ui-express');
-const swaggerFile = require('./swagger_output.json');
+const swaggerUI = require("swagger-ui-express");
+const swaggerFile = require("./swagger_output.json");
 
-const postRouter = require('./routes/posts');
-const usersRouter = require('./routes/users');
-const dotenv = require('dotenv');
-const uploadRouter = require('./routes/upload');
+const postRouter = require("./routes/posts");
+const usersRouter = require("./routes/users");
+const dotenv = require("dotenv");
+const uploadRouter = require("./routes/upload");
 
-dotenv.config({ path: './config.env' });
-const mongoose = require('mongoose');
+dotenv.config({ path: "./config.env" });
+const mongoose = require("mongoose");
 
 // 程式出現重大錯誤時
-process.on('uncaughtException', err => {
-  console.error('Uncaughted Exception！')
+process.on("uncaughtException", (err) => {
+  console.error("Uncaughted Exception！");
   console.error(err);
   process.exit(1);
 });
 
 const constr = process.env.DATABASE.replace(
-  '<password>'
-  , process.env.DATABASE_PASSWORD);
+  "<password>",
+  process.env.DATABASE_PASSWORD,
+);
 
-mongoose.set('strictQuery', false);
+mongoose.set("strictQuery", false);
 
-mongoose
-  .connect(constr)
-  .then(() => console.log("連線資料成功"));
+mongoose.connect(constr).then(() => console.log("連線資料成功"));
 
 const app = express();
 
-
 app.use(cors());
 
-app.use(logger('dev'));
+app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/api-doc', swaggerUI.serve, swaggerUI.setup(swaggerFile));
-app.use('/v1/api/upload', uploadRouter);
-app.use('/v1/api', usersRouter);
-app.use('/v1/api/posts', postRouter);
+app.use(express.static(path.join(__dirname, "public")));
+app.use("/api-doc", swaggerUI.serve, swaggerUI.setup(swaggerFile));
+app.use("/v1/api/upload", uploadRouter);
+app.use("/v1/api", usersRouter);
+app.use("/v1/api/posts", postRouter);
 
 // 404 錯誤
 app.use(function (req, res, next) {
   res.status(404).json({
-    status: 'error',
+    status: "error",
     message: "查無此路由，請確認API格式!",
   });
 });
-// 自己設定的 err 錯誤 
+// 自己設定的 err 錯誤
 const resErrorProd = (err, res) => {
-
   if (err.isOperational) {
     res.status(err.statusCode).json({
       status: false,
-      message: err.message
+      message: err.message,
     });
   } else {
-    console.error('出現重大錯誤', err);
+    console.error("出現重大錯誤", err);
     res.status(500).json({
-      status: 'error',
-      message: '系統錯誤，請恰系統管理員'
+      status: "error",
+      message: "系統錯誤，請恰系統管理員",
     });
   }
 };
@@ -75,7 +72,7 @@ const resErrorDev = (err, res) => {
   res.status(err.statusCode).json({
     message: err.message,
     error: err,
-    stack: err.stack
+    stack: err.stack,
   });
 };
 // 錯誤處理
@@ -83,25 +80,24 @@ app.use(function (err, req, res, next) {
   // dev
 
   err.statusCode = err.statusCode || 500;
-  if (process.env.NODE_ENV === 'dev') {
+  if (process.env.NODE_ENV === "dev") {
     return resErrorDev(err, res);
   }
 
   // production
-  else if (process.env.NODE_ENV === 'production') {
-    if (err.name === 'ValidationError') {
+  else if (process.env.NODE_ENV === "production") {
+    if (err.name === "ValidationError") {
       err.message = "欄位未填寫正確";
       err.isOperational = true;
-      return resErrorProd(err, res)
+      return resErrorProd(err, res);
     }
-    resErrorProd(err, res)
+    resErrorProd(err, res);
   }
 });
 
-// 未捕捉到的 catch 
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('未捕捉到的 rejection：', promise, '原因：', reason);
-
+// 未捕捉到的 catch
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("未捕捉到的 rejection：", promise, "原因：", reason);
 });
 
 module.exports = app;

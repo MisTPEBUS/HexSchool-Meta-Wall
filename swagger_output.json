@@ -32,9 +32,7 @@
   "paths": {
     "/v1/api/upload": {
       "post": {
-        "tags": [
-          "圖片上傳"
-        ],
+        "tags": ["圖片上傳"],
         "summary": "圖片上傳",
         "description": "圖片上傳",
         "parameters": [
@@ -147,9 +145,7 @@
                     "type": "file"
                   }
                 },
-                "required": [
-                  "file"
-                ]
+                "required": ["file"]
               }
             }
           }
@@ -158,9 +154,7 @@
     },
     "/v1/api/sign_up": {
       "post": {
-        "tags": [
-          "使用者登入驗證"
-        ],
+        "tags": ["使用者登入驗證"],
         "summary": "會員註冊",
         "description": "會員註冊",
         "responses": {
@@ -297,10 +291,7 @@
                   },
                   "sex": {
                     "type": "string",
-                    "enum": [
-                      "male",
-                      "female"
-                    ],
+                    "enum": ["male", "female"],
                     "example": "male"
                   },
                   "password": {
@@ -309,12 +300,7 @@
                     "example": "1q2w3e4r"
                   }
                 },
-                "required": [
-                  "name",
-                  "email",
-                  "sex",
-                  "password"
-                ]
+                "required": ["name", "email", "sex", "password"]
               }
             }
           }
@@ -323,9 +309,7 @@
     },
     "/v1/api/sign_in": {
       "post": {
-        "tags": [
-          "使用者登入驗證"
-        ],
+        "tags": ["使用者登入驗證"],
         "summary": "會員登入",
         "description": "會員登入",
         "responses": {
@@ -456,10 +440,7 @@
                     "example": "1q2w3e4r"
                   }
                 },
-                "required": [
-                  "email",
-                  "password"
-                ]
+                "required": ["email", "password"]
               }
             }
           }
@@ -468,9 +449,7 @@
     },
     "/v1/api/user/updatePassword": {
       "patch": {
-        "tags": [
-          "使用者登入驗證"
-        ],
+        "tags": ["使用者登入驗證"],
         "summary": "更新密碼",
         "description": "更新密碼",
         "parameters": [
@@ -617,10 +596,7 @@
                     "example": "1q2w3e4r"
                   }
                 },
-                "required": [
-                  "password",
-                  "confirmPassword"
-                ]
+                "required": ["password", "confirmPassword"]
               }
             }
           }
@@ -629,9 +605,7 @@
     },
     "/v1/api/sign_out": {
       "post": {
-        "tags": [
-          "使用者登入驗證"
-        ],
+        "tags": ["使用者登入驗證"],
         "summary": "會員登出",
         "description": "會員登出",
         "parameters": [
@@ -744,9 +718,7 @@
     },
     "/v1/api/user/profile": {
       "get": {
-        "tags": [
-          "使用者登入驗證"
-        ],
+        "tags": ["使用者登入驗證"],
         "summary": "查詢個人資料",
         "description": "查詢個人資料",
         "parameters": [
@@ -901,9 +873,7 @@
         ]
       },
       "patch": {
-        "tags": [
-          "使用者登入驗證"
-        ],
+        "tags": ["使用者登入驗證"],
         "summary": "查詢個人資料",
         "description": "查詢個人資料",
         "parameters": [
@@ -1078,10 +1048,7 @@
                   },
                   "sex": {
                     "type": "string",
-                    "enum": [
-                      "male",
-                      "female"
-                    ],
+                    "enum": ["male", "female"],
                     "example": "male"
                   }
                 }
@@ -1093,9 +1060,7 @@
     },
     "/v1/api/posts": {
       "get": {
-        "tags": [
-          "貼文牆管理"
-        ],
+        "tags": ["貼文牆管理"],
         "summary": "查詢全部貼文",
         "description": "查詢全部貼文",
         "parameters": [
@@ -1228,9 +1193,7 @@
         }
       },
       "post": {
-        "tags": [
-          "貼文牆管理"
-        ],
+        "tags": ["貼文牆管理"],
         "summary": "新增貼文",
         "description": "新增貼文",
         "parameters": [
@@ -1280,9 +1243,7 @@
                         },
                         "tags": {
                           "type": "array",
-                          "example": [
-                            "美食"
-                          ],
+                          "example": ["美食"],
                           "items": {
                             "type": "string"
                           }
@@ -1341,9 +1302,7 @@
                         },
                         "tags": {
                           "type": "array",
-                          "example": [
-                            "美食"
-                          ],
+                          "example": ["美食"],
                           "items": {
                             "type": "string"
                           }
@@ -1445,9 +1404,7 @@
                     "example": "https://unsplash.com/photos/a-black-and-white-photo-of-a-woman-holding-a-cell-phone-3D0Jxa1QSVA"
                   }
                 },
-                "required": [
-                  "content"
-                ]
+                "required": ["content"]
               }
             }
           }
@@ -1456,9 +1413,7 @@
     },
     "/v1/api/posts/personal": {
       "get": {
-        "tags": [
-          "貼文牆管理"
-        ],
+        "tags": ["貼文牆管理"],
         "summary": "查詢個人全部貼文",
         "description": "查詢個人全部貼文",
         "parameters": [
@@ -1524,9 +1479,7 @@
                           },
                           "tags": {
                             "type": "array",
-                            "example": [
-                              "美食"
-                            ],
+                            "example": ["美食"],
                             "items": {
                               "type": "string"
                             }
@@ -1584,9 +1537,7 @@
                           },
                           "tags": {
                             "type": "array",
-                            "example": [
-                              "美食"
-                            ],
+                            "example": ["美食"],
                             "items": {
                               "type": "string"
                             }
@@ -1661,9 +1612,7 @@
     },
     "/v1/api/posts/{id}": {
       "get": {
-        "tags": [
-          "貼文牆管理"
-        ],
+        "tags": ["貼文牆管理"],
         "summary": "查詢單一貼文",
         "description": "查詢單一貼文",
         "parameters": [
@@ -1714,9 +1663,7 @@
                         },
                         "tags": {
                           "type": "array",
-                          "example": [
-                            "美食"
-                          ],
+                          "example": ["美食"],
                           "items": {
                             "type": "string"
                           }
@@ -1775,9 +1722,7 @@
                         },
                         "tags": {
                           "type": "array",
-                          "example": [
-                            "美食"
-                          ],
+                          "example": ["美食"],
                           "items": {
                             "type": "string"
                           }
@@ -1853,9 +1798,7 @@
         ]
       },
       "patch": {
-        "tags": [
-          "貼文牆管理"
-        ],
+        "tags": ["貼文牆管理"],
         "summary": "更新貼文",
         "description": "更新貼文",
         "parameters": [
@@ -1914,9 +1857,7 @@
                         },
                         "tags": {
                           "type": "array",
-                          "example": [
-                            "美食"
-                          ],
+                          "example": ["美食"],
                           "items": {
                             "type": "string"
                           }
@@ -1975,9 +1916,7 @@
                         },
                         "tags": {
                           "type": "array",
-                          "example": [
-                            "美食"
-                          ],
+                          "example": ["美食"],
                           "items": {
                             "type": "string"
                           }
@@ -2079,18 +2018,14 @@
                     "example": "https://unsplash.com/photos/a-black-and-white-photo-of-a-woman-holding-a-cell-phone-3D0Jxa1QSVA"
                   }
                 },
-                "required": [
-                  "content"
-                ]
+                "required": ["content"]
               }
             }
           }
         }
       },
       "delete": {
-        "tags": [
-          "貼文牆管理"
-        ],
+        "tags": ["貼文牆管理"],
         "summary": "刪除文章",
         "description": "刪除文章",
         "parameters": [
@@ -2212,9 +2147,7 @@
     },
     "/v1/api/posts/ALL": {
       "delete": {
-        "tags": [
-          "貼文牆管理"
-        ],
+        "tags": ["貼文牆管理"],
         "summary": "刪除全部文章",
         "description": "刪除全部文章",
         "parameters": [

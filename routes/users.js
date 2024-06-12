@@ -1,65 +1,70 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const bcrypt = require('bcrypt');
-const validator = require('validator');
-const User = require('../models/users.js');
-const { Success, NotFound, appError } = require('../services/handleResponse.js');
-const { handleErrorAsync } = require('../services/handleResponse.js');
-const { isAuth, generateSendJWT } = require('../services/auth');
-const BlackList = require('../models/blackList.js');
-
+const bcrypt = require("bcrypt");
+const validator = require("validator");
+const User = require("../models/users.js");
+const {
+  Success,
+  NotFound,
+  appError,
+} = require("../services/handleResponse.js");
+const { handleErrorAsync } = require("../services/handleResponse.js");
+const { isAuth, generateSendJWT } = require("../services/auth");
+const BlackList = require("../models/blackList.js");
 
 //註冊
-router.post('/sign_up', handleErrorAsync(async (req, res, next) => {
+router.post(
+  "/sign_up",
+  handleErrorAsync(async (req, res, next) => {
+    let { name, email, photo, sex, password } = req.body;
+    if (!name || !email || !sex || !password) {
+      return next(appError("傳入格式異常!請查閱API文件", next));
+    }
+    // Content cannot null
+    if (!email.trim()) {
+      return next(appError("Email欄位不能為空值！", next));
+    }
+    if (!password.trim()) {
+      return next(appError("Password欄位不能為空值！", next));
+    }
+    if (!validator.isLength(password, { min: 8 })) {
+      return next(appError("Password至少要8碼！", next));
+    }
+    if (!name.trim()) {
+      return next(appError("Name欄位不能為空值！", next));
+    }
+    if (!sex.trim()) {
+      return next(appError("性別欄位不能為空值！", next));
+    }
+    // isEmail Type
+    if (!validator.isEmail(email)) {
+      return next(appError("Email 格式不正確", next));
+    }
+    // find user
 
-  let { name, email, photo, sex, password } = req.body;
-  if (!name || !email || !sex || !password) {
-    return next(appError("傳入格式異常!請查閱API文件", next));
-  }
-  // Content cannot null
-  if (!email.trim()) {
-    return next(appError("Email欄位不能為空值！", next));
-  }
-  if (!password.trim()) {
-    return next(appError("Password欄位不能為空值！", next));
-  }
-  if (!validator.isLength(password, { min: 8 })) {
-    return next(appError("Password至少要8碼！", next));
-  }
-  if (!name.trim()) {
-    return next(appError("Name欄位不能為空值！", next));
-  }
-  if (!sex.trim()) {
-    return next(appError("性別欄位不能為空值！", next));
-  }
-  // isEmail Type
-  if (!validator.isEmail(email)) {
-    return next(appError("Email 格式不正確", next));
-  }
-  // find user
+    const isUser = await User.findOne({ email: email });
 
-  const isUser = await User.findOne({ email: email });
+    if (isUser) {
+      return next(appError("使用者已經註冊", next, 409));
+    }
+    // pwd salt
 
-  if (isUser) {
-    return next(appError("使用者已經註冊", next, 409));
-  }
-  // pwd salt
-
-  password = bcrypt.hash(password, 12);
-  // 加密密碼
-  password = await bcrypt.hash(req.body.password, 12);
-  try {
-    const newUser = await User.create({
-      name,
-      email,
-      photo,
-      sex,
-      password
-    });
-    generateSendJWT(newUser, 201, res);
-  }
-  catch (err) { return next(appError(err.message, next)); }
-  /*
+    password = bcrypt.hash(password, 12);
+    // 加密密碼
+    password = await bcrypt.hash(req.body.password, 12);
+    try {
+      const newUser = await User.create({
+        name,
+        email,
+        photo,
+        sex,
+        password,
+      });
+      generateSendJWT(newUser, 201, res);
+    } catch (err) {
+      return next(appError(err.message, next));
+    }
+    /*
       #swagger.tags =  ['使用者登入驗證']
       #swagger.path = '/v1/api/sign_up'
       #swagger.method = 'post'
@@ -67,7 +72,7 @@ router.post('/sign_up', handleErrorAsync(async (req, res, next) => {
       #swagger.description = '會員註冊'
       #swagger.produces = ["application/json"] 
     */
-  /*
+    /*
  #swagger.requestBody = {
              required: true,
              description:"會員資料",
@@ -124,39 +129,39 @@ router.post('/sign_up', handleErrorAsync(async (req, res, next) => {
       }
     } 
  */
-
-}));
+  }),
+);
 
 //登入
-router.post('/sign_in', handleErrorAsync(async (req, res, next) => {
+router.post(
+  "/sign_in",
+  handleErrorAsync(async (req, res, next) => {
+    let { email, password } = req.body;
+    if (!email || !password) {
+      return next(appError("傳入格式異常!請查閱API文件", next));
+    }
+    // Content cannot null
 
-  let { email, password } = req.body;
-  if (!email || !password) {
-    return next(appError("傳入格式異常!請查閱API文件", next));
-  }
-  // Content cannot null
+    if (!email.trim() || !validator.isEmail(email)) {
+      return next(appError("Email欄位格式異常！", next));
+    }
+    if (!password.trim()) {
+      return next(appError("Password欄位不能為空值！", next));
+    }
 
-  if (!email.trim() || !validator.isEmail(email)) {
-    return next(appError("Email欄位格式異常！", next));
-  }
-  if (!password.trim()) {
-    return next(appError("Password欄位不能為空值！", next));
-  }
+    const user = await User.findOne({ email }).select("+password");
 
+    if (!user) {
+      return next(appError("使用者未註冊!", next));
+    }
 
-  const user = await User.findOne({ email }).select('+password');
+    const auth = await bcrypt.compare(password, user.password);
+    if (!auth) {
+      return next(appError("帳號密碼錯誤!", next));
+    }
+    generateSendJWT(user, 200, res);
 
-  if (!user) {
-    return next(appError("使用者未註冊!", next));
-  }
-
-  const auth = await bcrypt.compare(password, user.password);
-  if (!auth) {
-    return next(appError('帳號密碼錯誤!', next));
-  }
-  generateSendJWT(user, 200, res);
-
-  /*
+    /*
     #swagger.tags =  ['使用者登入驗證']
     #swagger.path = '/v1/api/sign_in'
     #swagger.method = 'post'
@@ -164,7 +169,7 @@ router.post('/sign_in', handleErrorAsync(async (req, res, next) => {
     #swagger.description = '會員登入'
     #swagger.produces = ["application/json"] 
   */
-  /*
+    /*
  #swagger.requestBody = {
              required: true,
              content: {
@@ -206,46 +211,47 @@ router.post('/sign_in', handleErrorAsync(async (req, res, next) => {
       }
     } 
  */
-
-}));
-
+  }),
+);
 
 //更新密碼
-router.patch('/user/updatePassword', isAuth, handleErrorAsync(async (req, res, next) => {
+router.patch(
+  "/user/updatePassword",
+  isAuth,
+  handleErrorAsync(async (req, res, next) => {
+    const { password, confirmPassword } = req.body;
 
-  const { password, confirmPassword } = req.body;
+    if (!password || !confirmPassword) {
+      return next(appError("傳入格式異常!請查閱API文件", next));
+    }
 
-  if (!password || !confirmPassword) {
-    return next(appError("傳入格式異常!請查閱API文件", next));
-  }
+    if (!password.trim()) {
+      return next(appError("password不得為空值!", next));
+    }
+    if (!confirmPassword.trim()) {
+      return next(appError("confirmPassword不得為空值!", next));
+    }
 
-  if (!password.trim()) {
-    return next(appError("password不得為空值!", next));
-  }
-  if (!confirmPassword.trim()) {
-    return next(appError("confirmPassword不得為空值!", next));
-  }
+    if (!validator.isLength(password, { min: 8 })) {
+      return next(appError("密碼至少8碼", next));
+    }
 
-  if (!validator.isLength(password, { min: 8 })) {
-    return next(appError("密碼至少8碼", next));
-  }
+    if (password !== confirmPassword) {
+      return next(appError("密碼不一致！", next));
+    }
 
-  if (password !== confirmPassword) {
-    return next(appError("密碼不一致！", next));
-  }
+    // 將新密碼加密
+    newPwd = await bcrypt.hash(password, 12);
 
-  // 將新密碼加密
-  newPwd = await bcrypt.hash(password, 12);
+    // 更新資料庫
+    const user = await User.findByIdAndUpdate(req.user.id, {
+      password: newPwd,
+    });
 
-  // 更新資料庫
-  const user = await User.findByIdAndUpdate(req.user.id, {
-    password: newPwd
-  });
+    // JWT
+    generateSendJWT(user, 200, res);
 
-  // JWT
-  generateSendJWT(user, 200, res);
-
-  /*
+    /*
       #swagger.tags =  ['使用者登入驗證']
       #swagger.path = '/v1/api/user/updatePassword'
       #swagger.method = 'patch'
@@ -256,7 +262,7 @@ router.patch('/user/updatePassword', isAuth, handleErrorAsync(async (req, res, n
         "bearerAuth": []
     }]
     */
-  /*
+    /*
  #swagger.requestBody = {
              required: true,
              content: {
@@ -300,26 +306,25 @@ router.patch('/user/updatePassword', isAuth, handleErrorAsync(async (req, res, n
       }
     } 
  */
-
-}));
+  }),
+);
 
 //登出
-router.post('/sign_out', isAuth, handleErrorAsync(async (req, res, next) => {
+router.post(
+  "/sign_out",
+  isAuth,
+  handleErrorAsync(async (req, res, next) => {
+    const hasBlackList = await BlackList.findOne({ token: req.user._id });
 
-
-  const hasBlackList = await BlackList.findOne({ token: req.user._id });
-
-  if (hasBlackList) {
-    return next(appError("使用者已經登出", next));
-  }
-  await BlackList
-    .create({
-      token: req.user._id
+    if (hasBlackList) {
+      return next(appError("使用者已經登出", next));
+    }
+    await BlackList.create({
+      token: req.user._id,
     });
-  Success(res, "會員登出");
+    Success(res, "會員登出");
 
-
-  /*
+    /*
       #swagger.tags =  ['使用者登入驗證']
       #swagger.path = '/v1/api/sign_out'
       #swagger.method = 'post'
@@ -330,7 +335,7 @@ router.post('/sign_out', isAuth, handleErrorAsync(async (req, res, next) => {
         "bearerAuth": []
     }]
     */
-  /*
+    /*
   
   #swagger.responses[200] = { 
     schema: {
@@ -348,20 +353,22 @@ router.post('/sign_out', isAuth, handleErrorAsync(async (req, res, next) => {
       }
     } 
  */
-
-
-}));
+  }),
+);
 
 //查詢個人資料
-router.get('/user/profile', isAuth, handleErrorAsync(async (req, res, next) => {
-  const { id } = req.user;
-  const userToSearch = await User.findById(id);
-  if (!userToSearch) {
-    return next(appError("使用者資料讀取異常，請重新登錄！", next));
-  }
-  Success(res, "", userToSearch);
+router.get(
+  "/user/profile",
+  isAuth,
+  handleErrorAsync(async (req, res, next) => {
+    const { id } = req.user;
+    const userToSearch = await User.findById(id);
+    if (!userToSearch) {
+      return next(appError("使用者資料讀取異常，請重新登錄！", next));
+    }
+    Success(res, "", userToSearch);
 
-  /*
+    /*
        #swagger.tags =  ['使用者登入驗證']
        #swagger.path = '/v1/api/user/profile'
        #swagger.method = 'get'
@@ -372,7 +379,7 @@ router.get('/user/profile', isAuth, handleErrorAsync(async (req, res, next) => {
          "bearerAuth": []
      }]
      */
-  /*
+    /*
   #swagger.responses[200] = { 
     schema: {
        "success": true,
@@ -393,38 +400,40 @@ router.get('/user/profile', isAuth, handleErrorAsync(async (req, res, next) => {
       }
     } 
  */
-
-}));
+  }),
+);
 
 //修改個人資料
-router.patch('/user/profile', isAuth, handleErrorAsync(async (req, res, next) => {
-  const { id } = req.user;
-  let { name, photo, sex } = req.body;
+router.patch(
+  "/user/profile",
+  isAuth,
+  handleErrorAsync(async (req, res, next) => {
+    const { id } = req.user;
+    let { name, photo, sex } = req.body;
 
-  if (!name || !photo || !sex) {
-    return next(appError("傳入格式異常!請查閱API文件", next));
-  }
-  // Content cannot null
+    if (!name || !photo || !sex) {
+      return next(appError("傳入格式異常!請查閱API文件", next));
+    }
+    // Content cannot null
 
-  if (!name.trim()) {
-    return next(appError("Name欄位不能為空值！", next));
-  }
+    if (!name.trim()) {
+      return next(appError("Name欄位不能為空值！", next));
+    }
 
-  if (!sex.trim()) {
-    return next(appError("性別欄位不能為空值！", next));
-  }
+    if (!sex.trim()) {
+      return next(appError("性別欄位不能為空值！", next));
+    }
 
-  const updateToUser = await User.findByIdAndUpdate(
-    { _id: id },
-    req.body,
-    { new: true });
-  if (!updateToUser) {
-    return next(appError(`此ID:${id}不存在!`, next));
-  }
+    const updateToUser = await User.findByIdAndUpdate({ _id: id }, req.body, {
+      new: true,
+    });
+    if (!updateToUser) {
+      return next(appError(`此ID:${id}不存在!`, next));
+    }
 
-  Success(res, `已修改個人資料!`, updateToUser, 200);
+    Success(res, `已修改個人資料!`, updateToUser, 200);
 
-  /*
+    /*
       #swagger.tags =  ['使用者登入驗證']
       #swagger.path = '/v1/api/user/profile'
       #swagger.method = 'patch'
@@ -435,7 +444,7 @@ router.patch('/user/profile', isAuth, handleErrorAsync(async (req, res, next) =>
         "bearerAuth": []
     }]
     */
-  /*
+    /*
      #swagger.requestBody = {
              required: true,
              description:"會員資料",
@@ -491,11 +500,49 @@ router.patch('/user/profile', isAuth, handleErrorAsync(async (req, res, next) =>
       }
     } 
  */
+  }),
+);
 
-
-}));
-
-
-
+//追蹤朋友
+router.post(
+  "/user/:id/follow",
+  isAuth,
+  handleErrorAsync(async (req, res, next) => {
+    console.log(req.params.id);
+    console.log(req.user.id);
+    if (req.params.id === req.user.id) {
+      return next(appError(401, "您無法追蹤自己", next));
+    }
+    /*
+      #swagger.tags =  ['使用者登入驗證']
+      #swagger.path = '/v1/api/sign_out'
+      #swagger.method = 'post'
+      #swagger.summary='會員登出'
+      #swagger.description = '會員登出'
+      #swagger.produces = ["application/json"] 
+      #swagger.security = [{
+        "bearerAuth": []
+    }]
+    */
+    /*
+  
+  #swagger.responses[200] = { 
+    schema: {
+        "status": "true",
+        "message": "會員登出",
+        "data": {
+             }
+        }
+      }
+    } 
+  #swagger.responses[400] = { 
+    schema: {
+        "status": false,
+        "message": "Error Msg",
+      }
+    } 
+ */
+  }),
+);
 
 module.exports = router;
