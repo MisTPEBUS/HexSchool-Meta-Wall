@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const validator = require("validator");
+const mongoose = require("mongoose");
+const Post = require("../models/posts");
 const User = require("../models/users.js");
 const {
   Success,
@@ -508,11 +510,54 @@ router.post(
   "/user/:id/follow",
   isAuth,
   handleErrorAsync(async (req, res, next) => {
-    console.log(req.params.id);
-    console.log(req.user.id);
-    if (req.params.id === req.user.id) {
-      return next(appError(401, "您無法追蹤自己", next));
+    const followID = req.params.id;
+    const id = req.user._id;
+
+    if (!followID) {
+      return next(appError("格式異常，貼文ID不能為空值!", next));
     }
+
+    if (!followID.trim() || !mongoose.Types.ObjectId.isValid(followID)) {
+      return next(appError("id格式異常，請重新確認!", next));
+    }
+
+    if (mongoose.Types.ObjectId(followID).equals(id)) {
+      return next(appError("異常，無法追蹤自己", next));
+    }
+
+
+    const hasUser = await User.findOne(
+      {
+        "_id": id,
+        'followings.user': followID
+      });
+
+    if (hasUser) {
+      return next(appError("此帳號已在追蹤名單", next));
+    }
+
+
+    await User.updateOne(
+      {
+        _id: id,
+        'followings.user': { $ne: followID }
+      },
+      {
+        $addToSet: { followings: { user: followID } }
+      }
+    );
+
+    await User.updateOne(
+      {
+        _id: followID,
+        'followers.user': { $ne: id }
+      },
+      {
+        $addToSet: { followers: { user: id } }
+      }
+    );
+
+    Success(res, `您已成功追蹤！`, '', 200);
     /*
       #swagger.tags =  ['使用者登入驗證']
       #swagger.path = '/v1/api/sign_out'
@@ -544,5 +589,92 @@ router.post(
  */
   }),
 );
+//取消追蹤朋友
+router.delete(
+  "/user/:id/unfollow",
+  isAuth,
+  handleErrorAsync(async (req, res, next) => {
+    const unfollowID = req.params.id;
+    const id = req.user._id;
 
+    if (!unfollowID) {
+      return next(appError("格式異常，貼文ID不能為空值!", next));
+    }
+
+    if (!unfollowID.trim() || !mongoose.Types.ObjectId.isValid(unfollowID)) {
+      return next(appError("id格式異常，請重新確認!", next));
+    }
+
+
+    if (mongoose.Types.ObjectId(unfollowID).equals(id)) {
+      return next(appError("異常，無法追蹤自己", next));
+    }
+
+    const hasUser = await User.findOne(
+      {
+        "_id": id,
+        'followings.user': unfollowID
+      });
+
+    if (!hasUser) {
+      return next(appError("此帳號不在追蹤名單", next));
+    }
+    console.log(hasUser)
+    await User.updateOne(
+      {
+        _id: id
+      },
+      {
+        $pull: { followings: { user: mongoose.Types.ObjectId(unfollowID) } }
+      },
+      { new: true }
+    );
+
+    await User.updateOne(
+      {
+        _id: unfollowID
+      },
+      {
+        $pull: { followers: { user: id } }
+      },
+      { new: true }
+    );
+
+
+    Success(res, '已成功取消追蹤！', '', 200);
+
+  }),
+);
+
+//取得個人追蹤名單
+router.get(
+  "/user/following",
+  isAuth,
+  handleErrorAsync(async (req, res, next) => {
+    const followList = await User.find({
+      _id: req.user.id
+    }).select('followings').populate({
+      path: 'followings.user',
+      select: 'name sex photo  '
+    });
+
+    Success(res, '', followList, 200);
+  }),
+);
+
+//取得個人按讚列表
+router.get(
+  "/user/getLikeList",
+  isAuth,
+  handleErrorAsync(async (req, res, next) => {
+    const likeList = await Post.find({
+      likes: { $in: [req.user.id] }
+    }).populate({
+      path: "likes",
+      select: "name _id"
+    });
+    Success(res, '', likeList, 200);
+
+  }),
+);
 module.exports = router;

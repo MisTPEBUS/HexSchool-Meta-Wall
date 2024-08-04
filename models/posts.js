@@ -5,7 +5,7 @@ const postSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "User",
       select: false,
-      required: [true, "名字 未填寫"],
+      required: [true, "UserID 未填寫"],
     },
     content: {
       type: String,
@@ -18,7 +18,7 @@ const postSchema = new mongoose.Schema(
     likes: [
       {
         type: mongoose.Schema.ObjectId,
-        ref: "User", // 填寫 model name
+        ref: "User",
       },
     ],
     tags: [{ type: String }],
@@ -33,9 +33,18 @@ const postSchema = new mongoose.Schema(
   },
   {
     versionKey: false,
-    strictPopulate: false,
+
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   },
 );
+
+postSchema.virtual('comments', {
+  ref: 'Comment',
+  foreignField: 'post',
+  localField: '_id'
+});
+
 const Post = mongoose.model("Post", postSchema);
 
 module.exports = Post;

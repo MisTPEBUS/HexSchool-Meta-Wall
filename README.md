@@ -101,18 +101,18 @@ HexSchool-Meta-Wall
 
 會員按讚追蹤動態
 
-- [ ] [POST]追蹤朋友：{url}/users/{userID}/follow
-- [ ] [DELETE]取消追蹤朋友：{url}/users/{userID}/unfollow
-- [ ] [GET]取得個人按讚列表：{url}/users/getLikeList
-- [ ] [GET]取得個人追蹤名單：{url}/users/following
+- [x] [POST]追蹤朋友：{url}/users/{userID}/follow
+- [x] [DELETE]取消追蹤朋友：{url}/users/{userID}/unfollow
+- [x] [GET]取得個人按讚列表：{url}/users/getLikeList
+- [x] [GET]取得個人追蹤名單：{url}/users/following
 
 動態貼文
 
 - [x] [GET]取得所有貼文：{url}/posts
 - [x] [GET]取得單一貼文：{url}/posts/{postID}
 - [x] [POST]新增貼文：{url}/posts
-- [ ] [POST]新增一則貼文的讚：{url}/posts/{postID}/like
-- [ ] [DELETE]取消一則貼文的讚：{url}/posts/{postID}/unlike
+- [x] [POST]新增一則貼文的讚：{url}/posts/{postID}/like
+- [x] [DELETE]取消一則貼文的讚：{url}/posts/{postID}/unlike
 - [ ] [POST]新增一則貼文的留言：{url}/posts/{postID}/comment
 - [x] [GET]取得個人所有貼文列表：{url}/post/user/{userID}
       其他

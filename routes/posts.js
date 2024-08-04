@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Post = require("../models/posts");
+const Comment = require("../models/comment.js");
 const resHandler = require("../services/handleResponse");
 const mongoose = require("mongoose");
 const {
@@ -27,7 +28,14 @@ router.get(
         { user: { $in: user } },
       ];
     }
-    const posts = await Post.find(query).populate("User").sort(tSort);
+    const posts = await Post.find(query).populate(
+      {
+        path: 'user',
+        select: 'name photo'
+      }).populate(
+        {
+          path: 'comments', select: 'comment user '
+        }).sort(tSort);
     Success(res, "", posts);
 
     /*
@@ -163,7 +171,7 @@ router.get(
     }
     const postToSearch = await Post.findById(id);
     if (!postToSearch) {
-      return Success(res, "", "", 204);
+      return Success(res, "", "", 404);
     }
     Success(res, "", postToSearch);
 
@@ -326,7 +334,7 @@ router.patch(
       new: true,
     });
     if (!postToUpdate) {
-      return Success(res, "", "", 204);
+      return Success(res, "", "", 404);
     }
 
     Success(res, `已修改貼文!`, postToUpdate, 200);
@@ -435,7 +443,7 @@ router.delete(
     );
 
     if (!postToDelete) {
-      return Success(res, "", "", 204);
+      return Success(res, "", "", 404);
     }
 
     Success(res, `貼文ID:${id} 已刪除!`);
@@ -529,4 +537,66 @@ router.delete(
   }),
 );
 
+//新增一則貼文的讚
+router.post(
+  "/:id/like",
+  isAuth,
+  handleErrorAsync(async (req, res, next) => {
+    const postID = req.params.id;
+    const id = req.user._id;
+
+    if (!postID) {
+      return next(appError("格式異常，貼文ID不能為空值!", next));
+    }
+
+    if (!postID.trim() || !mongoose.Types.ObjectId.isValid(postID)) {
+      return next(appError("id格式異常，請重新確認!", next));
+    }
+    const postLikeToUpdate = await Post.findOneAndUpdate(
+      { _id: postID },
+      { $addToSet: { likes: id } },
+      { new: true }
+    );
+
+    Success(res, `貼文按讚成功!`, postLikeToUpdate, 201);
+  }),
+);
+
+//取消一則貼文的讚
+router.delete(
+  "/:id/unlike",
+  isAuth,
+  handleErrorAsync(async (req, res, next) => {
+    const postID = req.params.id;
+    const id = req.user._id;
+
+    if (!postID) {
+      return next(appError("格式異常，貼文ID不能為空值!", next));
+    }
+
+    if (!postID.trim() || !mongoose.Types.ObjectId.isValid(postID)) {
+      return next(appError("id格式異常，請重新確認!", next));
+    }
+    const postLikeToUpdate = await Post.findOneAndUpdate(
+      { _id: postID },
+      { $pull: { likes: id } },
+      { new: true }
+    );
+
+    Success(res, `貼文按讚移除成功!`, postLikeToUpdate, 201);
+  })
+);
+//新增貼文留言
+router.post('/:id/comment', isAuth, handleErrorAsync(async (req, res, next) => {
+  const id = req.user._id;
+  const postID = req.params.id;
+  const { comment } = req.body;
+  const newComment = await Comment.create({
+    post: postID,
+    user: id,
+    comment
+  });
+  Success(res, '貼文新增成功', newComment, 201);
+
+}))
 module.exports = router;
